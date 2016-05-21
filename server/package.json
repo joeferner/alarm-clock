@@ -1,0 +1,16 @@
+{
+  "name": "alarm-clock",
+  "version": "0.0.1",
+  "description": "Alarm clock app for Raspberry PI",
+  "main": "index.js",
+  "keywords": [
+    "alarm",
+    "clock",
+    "raspberrypi"
+  ],
+  "author": "Joe Ferner <joe@fernsroth.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
+}
