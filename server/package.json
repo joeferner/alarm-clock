@@ -3,6 +3,11 @@
   "version": "0.0.1",
   "description": "Alarm clock app for Raspberry PI",
   "main": "index.js",
+  "scripts": {
+    "nodemon": "nodemon build/index.js",
+    "watch": "cd src && tsc -w",
+    "watch-web": "cd web/src && ../../node_modules/.bin/webpack --progress --colors --watch"
+  },
   "keywords": [
     "alarm",
     "clock",
@@ -11,6 +16,19 @@
   "author": "Joe Ferner <joe@fernsroth.com>",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.13.4"
+    "awesome-typescript-loader": "^0.17.0",
+    "express": "^4.13.4",
+    "radium": "^0.17.1",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "react-redux": "^4.4.5",
+    "redux": "^3.5.2",
+    "redux-logger": "^2.6.1",
+    "redux-thunk": "^2.1.0",
+    "webpack": "^1.13.1",
+    "webpack-notifier": "^1.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^1.8.10"
   }
 }

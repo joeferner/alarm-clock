@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "experimentalDecorators": true,
+    "module": "commonjs",
+    "target": "ES5",
+    "outDir": "../../build-web",
+    "rootDir": "."
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

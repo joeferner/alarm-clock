@@ -9,6 +9,8 @@
 
 1. Install chromium `sudo apt-get install chromium-browser`
 
+1. Install node `sudo apt-get install nodejs npm node-semver`
+
 1. Install unclutter (hide cursor) `sudo apt-get install unclutter`
 
 1. Run `sudo raspi-config` and update locale, keyboard, and timezone.
@@ -61,3 +63,12 @@
       @sed -i 's/"exited_cleanly": false/"exited_cleanly": true/' ~/.config/chromium/Default/Preferences
       @chromium-browser --noerrdialogs --kiosk http://localhost:8080 --incognito
 
+1. Install the server
+
+      sudo npm install tsc tsd nodemon -g
+      git clone alarm-clock
+      cd server
+      npm install
+      tsd install
+      tsc -w
+      nodemon build/index.js

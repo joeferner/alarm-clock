@@ -18,7 +18,34 @@
       "commit": "e0abafb1a6ff652f7ff967120e312d5c1916eaef"
     },
     "node/node.d.ts": {
-      "commit": "e0abafb1a6ff652f7ff967120e312d5c1916eaef"
+      "commit": "03fd25f9b0fdf12b5863ce01c9bde3b04184f37f"
+    },
+    "es6-shim/es6-shim.d.ts": {
+      "commit": "c59e98d3eedfb82077794ef89a964c98645b9bc5"
+    },
+    "radium/radium.d.ts": {
+      "commit": "c59e98d3eedfb82077794ef89a964c98645b9bc5"
+    },
+    "react-redux/react-redux.d.ts": {
+      "commit": "c59e98d3eedfb82077794ef89a964c98645b9bc5"
+    },
+    "redux/redux.d.ts": {
+      "commit": "c59e98d3eedfb82077794ef89a964c98645b9bc5"
+    },
+    "react/react.d.ts": {
+      "commit": "c59e98d3eedfb82077794ef89a964c98645b9bc5"
+    },
+    "redux-logger/redux-logger.d.ts": {
+      "commit": "c59e98d3eedfb82077794ef89a964c98645b9bc5"
+    },
+    "redux-promise/redux-promise.d.ts": {
+      "commit": "c59e98d3eedfb82077794ef89a964c98645b9bc5"
+    },
+    "redux-thunk/redux-thunk.d.ts": {
+      "commit": "c59e98d3eedfb82077794ef89a964c98645b9bc5"
+    },
+    "react/react-dom.d.ts": {
+      "commit": "c59e98d3eedfb82077794ef89a964c98645b9bc5"
     }
   }
 }
