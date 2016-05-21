@@ -5,6 +5,8 @@
 
 1. Run `sudo apt-get update` then `sudo apt-get upgrade`
 
+1. Setup passwordless ssh `vi ~/.ssh/authorized_keys`
+
 1. Install chromium `sudo apt-get install chromium-browser`
 
 1. Install unclutter (hide cursor) `sudo apt-get install unclutter`
