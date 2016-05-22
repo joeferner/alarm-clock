@@ -71,7 +71,7 @@
       @xset s noblank
       @unclutter
       @sed -i 's/"exited_cleanly": false/"exited_cleanly": true/' ~/.config/chromium/Default/Preferences
-      @chromium-browser --noerrdialogs --kiosk http://localhost:8080 --incognito
+      @chromium-browser --noerrdialogs --kiosk http://localhost:8080
 
 1. Install the server
 

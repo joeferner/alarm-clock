@@ -21,8 +21,8 @@ function startServer(callback) {
   app.use(passport.initialize());
 
   routes(app);
-  app.use(express.static(path.join('web/static')));
-  app.use(express.static(path.join('build-web')));
+  app.use(express.static(path.join(__dirname, '../web/static')));
+  app.use(express.static(path.join(__dirname, '../build-web')));
   app.listen(PORT, callback)
 }
 

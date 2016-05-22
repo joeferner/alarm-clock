@@ -25,7 +25,7 @@ export default class Clock extends React.Component<ClockProps, ClockState> {
     },
     
     time: {
-      fontSize: '150px',
+      fontSize: '125px',
       flex: '1 1 auto',
       textAlign: 'right',
       lineHeight: '140px',
@@ -38,11 +38,11 @@ export default class Clock extends React.Component<ClockProps, ClockState> {
       marginRight: '10px',
       display: 'inline'
     }
-  }
+  };
   
   state = {
     time: new Date()
-  }
+  };
   
   componentDidMount() {
     this.updateTimeInterval = setInterval(this.updateTime.bind(this), 1000);
