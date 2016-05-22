@@ -26,20 +26,22 @@ function getWundergroundJsonUrl(
   next: express.NextFunction
 ) {
   var missingFn = function (callback) {
+    console.log('requesting', url);
     return request(url, function (err, reqres, body) {
       if (err) {
         return callback(err);
       }
       try {
-        JSON.parse(body);
+        var bodyJson: any = JSON.parse(body);
+        return callback(null, JSON.stringify(body));
       } catch(e) {
         return callback(e);
       }
-      return callback(null, body);
     });
   };
   var conditions = cache().get(cacheKey, CACHE_TTL, missingFn, (err, value) => {
     if (err) {
+      console.error('failed to request', url, err);
       return next(err);
     }
     return res.send(JSON.parse(value));

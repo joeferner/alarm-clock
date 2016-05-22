@@ -38,7 +38,12 @@ export class Cache {
   readCacheSync(): void {
     if (fs.existsSync(this.cacheFilename)) {
       var data = fs.readFileSync(this.cacheFilename, 'utf8');
-      this.cache = JSON.parse(data);
+      try {
+        this.cache = JSON.parse(data);
+      } catch(e) {
+        console.error('Could not parse cache file: ', data, e);
+        this.cache = {};
+      }
     } else {
       console.log('Cache file "' + this.cacheFilename + '" missing');
       this.cache = {};
