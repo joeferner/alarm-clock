@@ -60,13 +60,18 @@ export default class Wunderground extends React.Component<WundergroundProps, Wun
   
   styles = {
     container: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'nowrap'
+      width: '240px',
+      height: '100px',
+      marginLeft: 'auto'
+    },
+
+    table: {
+      width: '100%'
     },
     
     dayContainer: {
-      margin: '5px'
+      margin: '5px',
+      textAlign: 'center'
     },
 
     image: {
@@ -81,11 +86,11 @@ export default class Wunderground extends React.Component<WundergroundProps, Wun
     weekday: {
       textAlign: 'center'
     }
-  }
+  };
   
   state: WundergroundState = {
     
-  }
+  };
   
   componentDidMount() {
     this.updateConditionsInterval = setInterval(this.updateConditions.bind(this), 60 * 1000);
@@ -202,20 +207,27 @@ export default class Wunderground extends React.Component<WundergroundProps, Wun
   render() {
     return (
       <div style={this.styles.container}>
-        <div style={this.styles.dayContainer}>
-          <img style={this.styles.image} src={this.getIcon()} alt={this.getIconAlt()}/>
-          <div style={this.styles.temperature}>{this.getTemperature()}</div>
-        </div>
-        <div style={this.styles.dayContainer}>
-          <img style={this.styles.image} src={this.getForecastIcon(0)} alt={this.getForecastIconAlt(0)}/>
-          <div style={this.styles.temperature}>{this.getForecastTemperature(0)}</div>
-          <div style={this.styles.weekday}>{this.getForecastWeekday(0)}</div>
-        </div>
-        <div style={this.styles.dayContainer}>
-          <img style={this.styles.image} src={this.getForecastIcon(1)} alt={this.getForecastIconAlt(1)}/>
-          <div style={this.styles.temperature}>{this.getForecastTemperature(1)}</div>
-          <div style={this.styles.weekday}>{this.getForecastWeekday(1)}</div>
-        </div>
+        <table style={this.styles.table}>
+          <tbody>
+            <tr>
+              <td style={this.styles.dayContainer}>
+                <img style={this.styles.image} src={this.getIcon()} alt={this.getIconAlt()}/>
+                <div style={this.styles.temperature}>{this.getTemperature()}</div>
+                <div style={this.styles.weekday}>Current</div>
+              </td>
+              <td style={this.styles.dayContainer}>
+                <img style={this.styles.image} src={this.getForecastIcon(0)} alt={this.getForecastIconAlt(0)}/>
+                <div style={this.styles.temperature}>{this.getForecastTemperature(0)}</div>
+                <div style={this.styles.weekday}>{this.getForecastWeekday(0)}</div>
+              </td>
+              <td style={this.styles.dayContainer}>
+                <img style={this.styles.image} src={this.getForecastIcon(1)} alt={this.getForecastIconAlt(1)}/>
+                <div style={this.styles.temperature}>{this.getForecastTemperature(1)}</div>
+                <div style={this.styles.weekday}>{this.getForecastWeekday(1)}</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     )
   }

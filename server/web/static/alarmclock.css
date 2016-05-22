@@ -1,16 +1,29 @@
 
 html {
-  width: 480px; 
+    width: 480px;
 }
 
 html, body {
-  height: 100%;
+    height: 100%;
 }
 
 body {
-  margin: 0;
-  background-color: black;
-  color: white;
-  font-family: sans-serif;
-  overflow: hidden;
+    margin: 0;
+    background-color: black;
+    color: white;
+    font-family: sans-serif;
+    overflow: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 8px; /* for vertical scrollbars */
+    height: 8px; /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(100, 100, 100, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(100, 100, 100, 0.5);
 }

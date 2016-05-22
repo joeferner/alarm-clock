@@ -1,6 +1,7 @@
 node_modules/
 build/
 build-web/
+sessions/
 typings/
 settings.json
 cache.json

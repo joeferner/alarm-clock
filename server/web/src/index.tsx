@@ -16,15 +16,33 @@ const logger = createLogger();
 const storeMiddleware = applyMiddleware(thunk, logger);
 const store = createStore(reducers, storeMiddleware);
 
+const styles = {
+  table: {
+    border: 0,
+    borderCollapse: 'collapse',
+    borderStyle: 'none'
+  },
+
+  tableCell: {
+    border: 0
+  }
+};
+
 ReactDOM.render(
   <Provider store={store}>
     <div>
-      <Refresh />
-      <Clock />
-      <div>
-        <Wunderground />
-        <GoogleCalendar />
-      </div>
+    <Refresh />
+      <table style={styles.table}>
+        <tbody>
+          <tr>
+            <td colSpan="2" style={styles.tableCell}><Clock /></td>
+          </tr>
+          <tr>
+            <td style={styles.tableCell}><Wunderground /></td>
+            <td style={styles.tableCell}><GoogleCalendar /></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </Provider>,
   document.getElementById('root')

@@ -1,9 +1,8 @@
 /// <reference path="../../../alarm-clock-web.d.ts" />
 
 import * as React from 'react';
-import { connect } from 'react-redux';
-import State from '../models/State';
 import * as Radium from 'radium';
+var dateFormat = require('dateformat');
 
 interface ClockProps {
 }
@@ -18,25 +17,34 @@ export default class Clock extends React.Component<ClockProps, ClockState> {
   
   styles = {
     container: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'nowrap',
+      width: '480px',
       alignItems: 'baseline'
+    },
+
+    timeContainer: {
+      width: '480px',
+      textAlign: 'right'
     },
     
     time: {
-      fontSize: '125px',
-      flex: '1 1 auto',
+      fontSize: '140px',
       textAlign: 'right',
-      lineHeight: '140px',
+      lineHeight: '120px',
       display: 'inline'
     },
     
     ampm: {
       fontSize: '30px',
-      flex: 'none',
       marginRight: '10px',
       display: 'inline'
+    },
+
+    dateContainer: {
+      textAlign: 'center'
+    },
+
+    date: {
+
     }
   };
   
@@ -57,29 +65,30 @@ export default class Clock extends React.Component<ClockProps, ClockState> {
   }
   
   getTimeString() {
-    let time = this.state.time;
-    var hours = time.getHours();
-    hours = hours % 12;
-    hours = hours ? hours : 12;
-    var hoursString = hours.toString();
-    
-    var minutes = time.getMinutes();
-    var minutesString = '00' + minutes;
-    minutesString = minutesString.substr(minutesString.length - 2);
-    
-    return hoursString + ':' + minutesString; 
+    const time = this.state.time;
+    return dateFormat(time, 'h:MM');
   }
   
   getAMPM() {
-    let time = this.state.time;
-    return time.getHours() >= 12 ? 'PM' : 'AM';
+    const time = this.state.time;
+    return dateFormat(time, 'tt');
+  }
+
+  getDate() {
+    const time = this.state.time;
+    return dateFormat(time, 'mmmm, dd');
   }
   
   render() {
     return (
       <div style={this.styles.container}>
-        <div style={this.styles.time}>{this.getTimeString()}</div>
-        <div style={this.styles.ampm}>{this.getAMPM()}</div>
+        <div style={this.styles.timeContainer}>
+          <div style={this.styles.time}>{this.getTimeString()}</div>
+          <div style={this.styles.ampm}>{this.getAMPM()}</div>
+        </div>
+        <div style={this.styles.dateContainer}>
+          <div style={this.styles.date}>{this.getDate()}</div>
+        </div>
       </div>
     )
   }
