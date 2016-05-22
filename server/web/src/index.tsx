@@ -9,6 +9,7 @@ import * as createLogger from 'redux-logger';
 import reducers from './reducers'
 import Clock from './components/Clock';
 import Wunderground from './components/Wunderground';
+import Refresh from './components/Refresh';
 
 const logger = createLogger();
 const storeMiddleware = applyMiddleware(thunk, logger);
@@ -17,6 +18,7 @@ const store = createStore(reducers, storeMiddleware);
 ReactDOM.render(
   <Provider store={store}>
     <div>
+      <Refresh />
       <Clock />
       <Wunderground />
     </div>

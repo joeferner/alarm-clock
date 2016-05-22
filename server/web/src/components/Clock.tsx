@@ -26,13 +26,14 @@ export default class Clock extends React.Component<ClockProps, ClockState> {
       fontSize: '175px',
       flex: '1 1 auto',
       textAlign: 'right',
-      marginTop: '-35px'
+      lineHeight: '136px'
     },
     
     ampm: {
       fontSize: '30px',
       flex: 'none',
-      marginRight: '10px'
+      marginRight: '10px',
+      alignSelf: 'flex-end'
     }
   }
   
