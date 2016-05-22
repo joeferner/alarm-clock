@@ -13,6 +13,16 @@
 
 1. Install unclutter (hide cursor) `sudo apt-get install unclutter`
 
+1. Install a newer node
+
+      wget https://nodejs.org/dist/v6.2.0/node-v6.2.0-linux-armv7l.tar.xz
+      tar xf node-v6.2.0-linux-armv7l.tar.xz
+      sudo mv node-v6.2.0-linux-armv7l /opt/
+      rm node-v6.2.0-linux-armv7l.tar.xz
+      sudo ln -s /opt/node-v6.2.0-linux-armv7l /opt/node
+      sudo rm /usr/bin/node
+      sudo ln -s /opt/node-v6.2.0-linux-armv7l/bin/node /usr/bin/node
+
 1. Run `sudo raspi-config` and update locale, keyboard, and timezone.
 
 1. Run `sudo dpkg-reconfigure console-setup` and select:
