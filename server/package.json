@@ -3,11 +3,6 @@
   "version": "0.0.1",
   "description": "Alarm clock app for Raspberry PI",
   "main": "index.js",
-  "scripts": {
-    "nodemon": "nodemon build/index.js",
-    "watch": "cd src && ../node_modules/.bin/tsc -w",
-    "watch-web": "cd web/src && ../../node_modules/.bin/webpack --progress --colors --watch"
-  },
   "keywords": [
     "alarm",
     "clock",
@@ -19,6 +14,7 @@
     "awesome-typescript-loader": "^0.17.0",
     "axios": "^0.11.1",
     "express": "^4.13.4",
+    "jsonic": "^0.2.2",
     "radium": "^0.17.1",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",

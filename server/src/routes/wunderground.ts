@@ -1,6 +1,6 @@
 /// <reference path="../../alarm-clock.d.ts" />
 import * as express from 'express-serve-static-core';
-import request = require('request');
+import axios = require('axios');
 import settings from '../settings';
 import cache from '../cache';
 
@@ -27,17 +27,20 @@ function getWundergroundJsonUrl(
 ) {
   var missingFn = function (callback) {
     console.log('requesting', url);
-    return request(url, function (err, reqres, body) {
-      if (err) {
+    return axios.get(url)
+      .then((body) => {
+        console.log('success: ' + url + ' (status: ' + body.status + ')');
+        try {
+          return callback(null, JSON.stringify(body.data));
+        } catch(e) {
+          console.error('failed to parse json:', body.data);
+          return callback(e);
+        }
+      })
+      .catch((err) => {
+        console.error('could not get url: ' + url, err);
         return callback(err);
-      }
-      try {
-        var bodyJson: any = JSON.parse(body);
-        return callback(null, JSON.stringify(body));
-      } catch(e) {
-        return callback(e);
-      }
-    });
+      })
   };
   var conditions = cache().get(cacheKey, CACHE_TTL, missingFn, (err, value) => {
     if (err) {

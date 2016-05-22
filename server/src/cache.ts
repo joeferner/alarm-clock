@@ -51,7 +51,18 @@ export class Cache {
   }
   
   writeCache(callback: (err?: Error) => void): void {
-    fs.writeFile(this.cacheFilename, JSON.stringify(this.cache), callback);
+    try {
+      fs.writeFileSync(this.cacheFilename, JSON.stringify(this.cache));
+      return callback();
+    } catch(e) {
+      console.error('could not write cache file', e);
+      return callback(e);
+    }
+  }
+  
+  clear(callback: (err?: Error) => void): void {
+    this.cache = {};
+    this.writeCache(callback);
   }
   
   get(name: string, ttl: number, missingFn: CacheMissingFn, callback: CacheGetCallbackFn): any {
