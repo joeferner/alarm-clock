@@ -61,7 +61,8 @@ export default class Wunderground extends React.Component<WundergroundProps, Wun
   styles = {
     container: {
       display: 'flex',
-      flexDirection: 'row'
+      flexDirection: 'row',
+      flexWrap: 'nowrap'
     },
     
     dayContainer: {

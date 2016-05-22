@@ -19,21 +19,22 @@ export default class Clock extends React.Component<ClockProps, ClockState> {
   styles = {
     container: {
       display: 'flex',
-      flexDirection: 'row'
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
+      alignItems: 'baseline'
     },
     
     time: {
       fontSize: '175px',
       flex: '1 1 auto',
       textAlign: 'right',
-      lineHeight: '136px'
+      lineHeight: '140px'
     },
     
     ampm: {
       fontSize: '30px',
       flex: 'none',
-      marginRight: '10px',
-      alignSelf: 'flex-end'
+      marginRight: '10px'
     }
   }
   
