@@ -23,6 +23,10 @@ function startServer(callback) {
   routes(app);
   app.use(express.static(path.join(__dirname, '../web/static')));
   app.use(express.static(path.join(__dirname, '../build-web')));
+  app.use(function(req: express.Request, res: express.Response, next: express.NextFunction) {
+    console.log('Invalid path: ' + req.originalUrl);
+    next();
+  });
   app.listen(PORT, callback)
 }
 
