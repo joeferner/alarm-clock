@@ -1,6 +1,6 @@
 /// <reference path="../../alarm-clock.d.ts" />
 import * as express from 'express-serve-static-core';
-import axios = require('axios');
+import * as axios from 'axios';
 import settings from '../settings';
 import cache from '../cache';
 

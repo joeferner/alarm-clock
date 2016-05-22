@@ -10,6 +10,7 @@ import reducers from './reducers'
 import Clock from './components/Clock';
 import Wunderground from './components/Wunderground';
 import Refresh from './components/Refresh';
+import GoogleCalendar from './components/GoogleCalendar';
 
 const logger = createLogger();
 const storeMiddleware = applyMiddleware(thunk, logger);
@@ -20,7 +21,10 @@ ReactDOM.render(
     <div>
       <Refresh />
       <Clock />
-      <Wunderground />
+      <div>
+        <Wunderground />
+        <GoogleCalendar />
+      </div>
     </div>
   </Provider>,
   document.getElementById('root')

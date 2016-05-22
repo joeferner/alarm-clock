@@ -1,6 +1,7 @@
 /// <reference path="../../alarm-clock.d.ts" />
 import * as express from 'express-serve-static-core';
 import wunderground from './wunderground';
+import googleCalendar from './googleCalendar';
 import cache from '../cache';
 
 export default function(app: express.Application) {
@@ -14,4 +15,5 @@ export default function(app: express.Application) {
   });
   
   wunderground(app);
+  googleCalendar(app);
 }
