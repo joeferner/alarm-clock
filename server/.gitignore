@@ -1,3 +1,6 @@
 node_modules/
 build/
+build-web/
 typings/
+settings.json
+cache.json
