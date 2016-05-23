@@ -12,6 +12,7 @@ interface WundergroundConditions {
   current_observation: {
     weather: string,
     temp_f: number,
+    icon: string,
     icon_url: string
   }
 }
@@ -148,9 +149,9 @@ export default class Wunderground extends React.Component<WundergroundProps, Wun
   
   getIcon(): string {
     if (!this.state.conditions) {
-      return '/wunderground/na.png';
+      return '/wunderground/na.gif';
     }
-    return this.state.conditions.current_observation.icon_url;
+    return '/wunderground/' + this.state.conditions.current_observation.icon + '.gif';
   }
   
   getIconAlt(): string {
@@ -184,9 +185,9 @@ export default class Wunderground extends React.Component<WundergroundProps, Wun
   getForecastIcon(idx: number): string {
     var day = this.getForecastDay(idx);
     if (!day) {
-      return '/wunderground/na.png';
+      return '/wunderground/na.gif';
     }
-    return day.icon_url;
+    return '/wunderground/' + day.icon + '.gif';
   }
 
   getForecastIconAlt(idx: number): string {
