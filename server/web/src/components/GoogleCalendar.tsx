@@ -161,7 +161,7 @@ export default class GoogleCalendar extends React.Component<GoogleCalendarProps,
 
   renderGroup(yearMonthDay, items) {
     var date = GoogleCalendar.parseDateString(yearMonthDay);
-    var yearMonthDayString = dateFormat(date, 'dddd mm/dd');
+    var yearMonthDayString = dateFormat(date, 'dddd mmm dd');
 
     const header = (
       <tr style={this.styles.line} key={yearMonthDay}>

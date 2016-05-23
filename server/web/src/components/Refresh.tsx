@@ -9,20 +9,20 @@ export default class Refresh extends React.Component<any, any> {
     container: {
       position: 'absolute',
       top: '0px',
-      right: '0px',
+      left: '0px',
       cursor: 'pointer',
       opacity: 0.1
     }
   };
 
-  onClick() {
+  static onClick() {
     location.reload();
   }
 
   render() {
     return (
       <div style={this.styles.container}>
-        <img onClick={this.onClick} src='/refresh.png'/>
+        <img onClick={Refresh.onClick} src='/refresh.png'/>
       </div>
     )
   }
