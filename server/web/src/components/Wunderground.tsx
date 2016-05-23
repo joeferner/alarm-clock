@@ -171,22 +171,26 @@ export default class Wunderground extends React.Component<WundergroundProps, Wun
     return day.low.fahrenheit + DEGREES + '/' + day.high.fahrenheit + DEGREES;
   }
 
-  getForecastIcon(idx: number): string {
+  private getForecastDay(idx:number) {
     if (!this.state.forecast) {
-      return '/wunderground/na.png';
+      return null;
     }
-    var day = this.state.forecast.forecast.simpleforecast.forecastday[idx];
+    if (new Date().getHours() > 20) {
+      idx++;
+    }
+    return this.state.forecast.forecast.simpleforecast.forecastday[idx];
+  }
+
+  getForecastIcon(idx: number): string {
+    var day = this.getForecastDay(idx);
     if (!day) {
       return '/wunderground/na.png';
     }
     return day.icon_url;
   }
-  
+
   getForecastIconAlt(idx: number): string {
-    if (!this.state.forecast) {
-      return 'NA';
-    }
-    var day = this.state.forecast.forecast.simpleforecast.forecastday[idx];
+    var day = this.getForecastDay(idx);
     if (!day) {
       return 'NA';
     }
@@ -194,10 +198,7 @@ export default class Wunderground extends React.Component<WundergroundProps, Wun
   }
 
   getForecastWeekday(idx: number): string {
-    if (!this.state.forecast) {
-      return 'NA';
-    }
-    var day = this.state.forecast.forecast.simpleforecast.forecastday[idx];
+    var day = this.getForecastDay(idx);
     if (!day) {
       return 'NA';
     }

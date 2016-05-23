@@ -21,9 +21,7 @@ export default class GoogleCalendar extends React.Component<GoogleCalendarProps,
   styles = {
     authorizeContainer: {
       width: '240px',
-      height: '100px',
-      textAlign: 'center',
-      paddingTop: '35px'
+      textAlign: 'center'
     },
 
     authorizeLink: {
