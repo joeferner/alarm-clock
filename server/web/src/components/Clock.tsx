@@ -18,12 +18,14 @@ export default class Clock extends React.Component<ClockProps, ClockState> {
   styles = {
     container: {
       width: '480px',
-      alignItems: 'baseline'
+      height: '150px',
+      paddingTop: '30px',
+      paddingBottom: '30px'
     },
 
     timeContainer: {
       width: '480px',
-      textAlign: 'right'
+      textAlign: 'center'
     },
     
     time: {
@@ -36,7 +38,9 @@ export default class Clock extends React.Component<ClockProps, ClockState> {
     ampm: {
       fontSize: '30px',
       marginRight: '10px',
-      display: 'inline'
+      display: 'inline',
+      position: 'absolute',
+      top: '107px'
     },
 
     dateContainer: {
