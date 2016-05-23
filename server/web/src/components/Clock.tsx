@@ -29,7 +29,7 @@ export default class Clock extends React.Component<ClockProps, ClockState> {
     },
     
     time: {
-      fontSize: '140px',
+      fontSize: '120px',
       textAlign: 'right',
       lineHeight: '120px',
       display: 'inline'
