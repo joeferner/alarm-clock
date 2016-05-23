@@ -38,26 +38,35 @@ export default class GoogleCalendar extends React.Component<GoogleCalendarProps,
     },
 
     list: {
-      listStyleType: 'none',
-      paddingLeft: '0px',
-      marginTop: '0px'
+      width: '240px'
     },
 
     line: {
-      whiteSpace: 'nowrap',
-      textOverflow: 'ellipsis'
+
     },
 
-    dateTime: {
+    day: {
+      fontWeight: 'bold',
+      borderBottom: '1px solid white'
+    },
+
+    time: {
       fontWeight: 'bold',
       marginRight: '5px',
-      display: 'inline-block',
-      width: '100px',
-      textAlign: 'right'
+      textAlign: 'right',
+      whiteSpace: 'nowrap',
+      width: '70px'
     },
 
     summary: {
 
+    },
+
+    summaryDiv: {
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      width: '150px'
     }
   };
   
@@ -93,20 +102,45 @@ export default class GoogleCalendar extends React.Component<GoogleCalendarProps,
       });
   }
 
-  static getEventDateTime(item: GoogleCalendarEvent): Date {
+  private static getEventDateTime(item: GoogleCalendarEvent): Date {
     var dateTimeString = item.start.dateTime || item.start.date;
-    return new Date(Date.parse(dateTimeString) + 1);
+    return this.parseDateString(dateTimeString);
+  }
+
+  private static parseDateString(str: string): Date {
+    var date;
+    var m = str.match(/^([0-9]+)-([0-9]+)-([0-9]+)$/);
+    if (m) {
+      date = new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]));
+    } else {
+      date = new Date(Date.parse(str));
+    }
+    return date;
   }
 
   static getEventDateTimeString(item: GoogleCalendarEvent): string {
     var date = GoogleCalendar.getEventDateTime(item);
     if (item.start.dateTime) {
-      return dateFormat(date, "ddd h:mmtt");
+      return dateFormat(date, 'h:mmtt');
     } else {
-      return dateFormat(date, "ddd");
+      return 'All day';
     }
   }
-  
+
+  private groupItemsByDay() {
+    var groups = {};
+    this.state.items.forEach((item) => {
+      var yearMonthDay = dateFormat(GoogleCalendar.getEventDateTime(item), 'yyyy-mm-dd');
+      var group = groups[yearMonthDay];
+      if (!group) {
+        group = [];
+        groups[yearMonthDay] = group;
+      }
+      group.push(item);
+    });
+    return groups;
+  }
+
   render() {
     if (this.state.unauthorized) {
       return (
@@ -117,22 +151,40 @@ export default class GoogleCalendar extends React.Component<GoogleCalendarProps,
     } else {
       return (
         <div style={this.styles.container}>
-          <ol style={this.styles.list}>
-            {this.renderListItems()}
-          </ol>
+          <table style={this.styles.list}>
+            <tbody>
+              {this.renderListItems()}
+            </tbody>
+          </table>
         </div>
       );
     }
   }
 
   renderListItems() {
-    return this.state.items.map((item: GoogleCalendarEvent) => {
-      return (
-        <li style={this.styles.line} key={item.id}>
-          <span style={this.styles.dateTime}>{GoogleCalendar.getEventDateTimeString(item)}</span>
-          <span style={this.styles.summary}>{item.summary}</span>
-        </li>
-      );
+    var groups = this.groupItemsByDay();
+    return Object.keys(groups).sort().map((groupName) => {
+      return this.renderGroup(groupName, groups[groupName]);
     });
+  }
+
+  renderGroup(yearMonthDay, items) {
+    var date = GoogleCalendar.parseDateString(yearMonthDay);
+    var yearMonthDayString = dateFormat(date, 'dddd mm/dd');
+
+    const header = (
+      <tr style={this.styles.line} key={yearMonthDay}>
+        <td style={this.styles.day} colSpan="2">{yearMonthDayString}</td>
+      </tr>
+    );
+
+    return [header, items.map((item: GoogleCalendarEvent) => {
+      return (
+        <tr style={this.styles.line} key={item.id}>
+          <td style={this.styles.time}>{GoogleCalendar.getEventDateTimeString(item)}</td>
+          <td style={this.styles.summary}><div style={this.styles.summaryDiv}>{item.summary}</div></td>
+        </tr>
+      );
+    })];
   }
 }
