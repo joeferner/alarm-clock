@@ -17,8 +17,6 @@ export default class Clock extends React.Component<ClockProps, ClockState> {
   
   styles = {
     container: {
-      width: '480px',
-      height: '150px',
       paddingTop: '30px',
       paddingBottom: '30px'
     },

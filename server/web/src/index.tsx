@@ -25,6 +25,16 @@ const styles = {
 
   tableCell: {
     border: 0
+  },
+
+  primaryWidgetContainer: {
+    width: '480px',
+    height: '200px'
+  },
+
+  secondaryWidgetContainer: {
+    width: '240px',
+    height: '120px'
   }
 };
 
@@ -35,11 +45,11 @@ ReactDOM.render(
       <table style={styles.table}>
         <tbody>
           <tr>
-            <td colSpan="2" style={styles.tableCell}><Clock /></td>
+            <td colSpan="2" style={styles.tableCell}><div style={styles.primaryWidgetContainer}><Clock /></div></td>
           </tr>
           <tr>
-            <td style={styles.tableCell}><Wunderground /></td>
-            <td style={styles.tableCell}><GoogleCalendar /></td>
+            <td style={styles.tableCell}><div style={styles.secondaryWidgetContainer}><Wunderground /></div></td>
+            <td style={styles.tableCell}><div style={styles.secondaryWidgetContainer}><GoogleCalendar /></div></td>
           </tr>
         </tbody>
       </table>

@@ -20,7 +20,6 @@ export default class GoogleCalendar extends React.Component<GoogleCalendarProps,
 
   styles = {
     authorizeContainer: {
-      width: '240px',
       textAlign: 'center'
     },
 
@@ -29,8 +28,6 @@ export default class GoogleCalendar extends React.Component<GoogleCalendarProps,
     },
 
     container: {
-      width: '240px',
-      height: '100px',
       overflowY: 'scroll',
       overflowX: 'hidden'
     },

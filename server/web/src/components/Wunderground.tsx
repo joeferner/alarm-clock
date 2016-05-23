@@ -61,8 +61,6 @@ export default class Wunderground extends React.Component<WundergroundProps, Wun
   
   styles = {
     container: {
-      width: '240px',
-      height: '100px',
       marginLeft: 'auto'
     },
 
