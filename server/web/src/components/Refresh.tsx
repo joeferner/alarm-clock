@@ -11,7 +11,7 @@ export default class Refresh extends React.Component<any, any> {
       top: '0px',
       right: '0px',
       cursor: 'pointer',
-      opacity: 0.4
+      opacity: 0.1
     }
   };
 
