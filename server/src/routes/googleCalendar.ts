@@ -75,6 +75,9 @@ export default function (app:express.Application) {
         getEventsForCalendar(req.session['access_token'], calendarId, callback);
       }, function(err, results: GoogleCalendarEventsResponse[]) {
         if (err) {
+          if (err.code == 401) {
+            return res.sendStatus(401);
+          }
           return callback(err);
         }
         var allEvents = combineEvents(results);
