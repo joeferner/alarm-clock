@@ -1,8 +1,8 @@
 /// <reference path="../../../alarm-clock-web.d.ts" />
 /// <reference path="../../../src/routes/googleCalendar.d.ts" />
 
-import * as React from 'react';
-import * as Radium from 'radium';
+import * as React from "react";
+import * as Radium from "radium";
 import axios = require('axios');
 var dateFormat = require('dateformat');
 
@@ -10,14 +10,14 @@ interface GoogleCalendarProps {
 }
 
 interface GoogleCalendarState {
-  items?: GoogleCalendarEvent[];
-  unauthorized?: boolean;
+  items?:GoogleCalendarEvent[];
+  unauthorized?:boolean;
 }
 
 @Radium
 export default class GoogleCalendar extends React.Component<GoogleCalendarProps, GoogleCalendarState> {
   updateEventsInterval;
-  
+
   styles = {
     authorizeContainer: {
       width: '240px',
@@ -41,9 +41,7 @@ export default class GoogleCalendar extends React.Component<GoogleCalendarProps,
       width: '240px'
     },
 
-    line: {
-
-    },
+    line: {},
 
     day: {
       fontWeight: 'bold',
@@ -58,9 +56,7 @@ export default class GoogleCalendar extends React.Component<GoogleCalendarProps,
       width: '70px'
     },
 
-    summary: {
-
-    },
+    summary: {},
 
     summaryDiv: {
       whiteSpace: 'nowrap',
@@ -69,12 +65,12 @@ export default class GoogleCalendar extends React.Component<GoogleCalendarProps,
       width: '150px'
     }
   };
-  
+
   state = {
     items: [],
     unauthorized: false
   };
-  
+
   componentDidMount() {
     this.updateEventsInterval = setInterval(this.updateEvents.bind(this), 10 * 60 * 1000);
     this.updateEvents();
@@ -83,11 +79,11 @@ export default class GoogleCalendar extends React.Component<GoogleCalendarProps,
   componentWillUnmount() {
     clearInterval(this.updateEventsInterval);
   }
-  
+
   updateEvents() {
     axios.get('/googleCalendar/events')
       .then((body) => {
-        var res: GoogleCalendarEventsResponse = body.data as GoogleCalendarEventsResponse;
+        var res:GoogleCalendarEventsResponse = body.data as GoogleCalendarEventsResponse;
         this.setState({
           items: res.items,
           unauthorized: false
@@ -102,12 +98,12 @@ export default class GoogleCalendar extends React.Component<GoogleCalendarProps,
       });
   }
 
-  private static getEventDateTime(item: GoogleCalendarEvent): Date {
+  private static getEventDateTime(item:GoogleCalendarEvent):Date {
     var dateTimeString = item.start.dateTime || item.start.date;
     return this.parseDateString(dateTimeString);
   }
 
-  private static parseDateString(str: string): Date {
+  private static parseDateString(str:string):Date {
     var date;
     var m = str.match(/^([0-9]+)-([0-9]+)-([0-9]+)$/);
     if (m) {
@@ -118,7 +114,7 @@ export default class GoogleCalendar extends React.Component<GoogleCalendarProps,
     return date;
   }
 
-  static getEventDateTimeString(item: GoogleCalendarEvent): string {
+  static getEventDateTimeString(item:GoogleCalendarEvent):string {
     var date = GoogleCalendar.getEventDateTime(item);
     if (item.start.dateTime) {
       return dateFormat(date, 'h:mmtt');
@@ -153,7 +149,7 @@ export default class GoogleCalendar extends React.Component<GoogleCalendarProps,
         <div style={this.styles.container}>
           <table style={this.styles.list}>
             <tbody>
-              {this.renderListItems()}
+            {this.renderListItems()}
             </tbody>
           </table>
         </div>
@@ -178,11 +174,13 @@ export default class GoogleCalendar extends React.Component<GoogleCalendarProps,
       </tr>
     );
 
-    return [header, items.map((item: GoogleCalendarEvent) => {
+    return [header, items.map((item:GoogleCalendarEvent) => {
       return (
         <tr style={this.styles.line} key={item.id}>
           <td style={this.styles.time}>{GoogleCalendar.getEventDateTimeString(item)}</td>
-          <td style={this.styles.summary}><div style={this.styles.summaryDiv}>{item.summary}</div></td>
+          <td style={this.styles.summary}>
+            <div style={this.styles.summaryDiv}>{item.summary}</div>
+          </td>
         </tr>
       );
     })];

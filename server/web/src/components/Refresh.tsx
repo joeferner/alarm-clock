@@ -1,8 +1,7 @@
 /// <reference path="../../../alarm-clock-web.d.ts" />
 
-import * as React from 'react';
-import State from '../models/State';
-import * as Radium from 'radium';
+import * as React from "react";
+import * as Radium from "radium";
 
 @Radium
 export default class Refresh extends React.Component<any, any> {
@@ -12,10 +11,10 @@ export default class Refresh extends React.Component<any, any> {
       top: '0px',
       right: '0px',
       cursor: 'pointer',
-      opacity: 0.6
+      opacity: 0.4
     }
-  }
-  
+  };
+
   onClick() {
     location.reload();
   }
