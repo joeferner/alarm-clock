@@ -105,7 +105,7 @@ export default function (app:express.Application) {
           if (err) {
             return refreshAccessTokens(req, (err?: Error) => {
               if (err) {
-                return callback(err);
+                return callback(err, null);
               }
               return getEventsForCalendar(req.session['access_token'], calendarId, callback);
             });
