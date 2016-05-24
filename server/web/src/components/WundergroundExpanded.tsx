@@ -7,14 +7,14 @@ import * as Radium from "radium";
 
 const DEGREES = '\xB0';
 
-interface WundergroundProps extends WundergroundBaseProps {
+interface WundergroundExpandedProps extends WundergroundBaseProps {
 }
 
-interface WundergroundState extends WundergroundBaseState {
+interface WundergroundExpandedState extends WundergroundBaseState {
 }
 
 @Radium
-export default class Wunderground extends WundergroundBase<WundergroundProps, WundergroundState> {
+export default class WundergroundExpanded extends WundergroundBase<WundergroundExpandedProps, WundergroundExpandedState> {
   styles = {
     container: {
       marginLeft: 'auto'
@@ -22,6 +22,10 @@ export default class Wunderground extends WundergroundBase<WundergroundProps, Wu
 
     table: {
       width: '100%'
+    },
+
+    radarContainer: {
+      textAlign: 'center'
     },
 
     dayContainer: {
@@ -43,24 +47,25 @@ export default class Wunderground extends WundergroundBase<WundergroundProps, Wu
     }
   };
 
-  state:WundergroundState = {};
-
-  private static expandSelf() {
-    window.location.hash = 'wunderground';
-  }
+  state:WundergroundExpandedState = {};
 
   render() {
     return (
-      <div style={this.styles.container} onClick={()=> Wunderground.expandSelf()}>
+      <div style={this.styles.container}>
         <table style={this.styles.table}>
           <tbody>
+          <tr>
+            <td style={this.styles.radarContainer} colSpan="4">
+              <img src="/wunderground/radar.png"/>
+            </td>
+          </tr>
           <tr>
             <td style={this.styles.dayContainer}>
               <img style={this.styles.image} src={this.getIcon()} alt={this.getIconAlt()}/>
               <div style={this.styles.temperature}>{this.getTemperature()}</div>
               <div style={this.styles.weekday}>Current</div>
             </td>
-            {[0,1].map((x, i) =>
+            {[0, 1, 2].map((x, i) =>
               <td style={this.styles.dayContainer}>
                 <img style={this.styles.image} src={this.getForecastIcon(i)} alt={this.getForecastIconAlt(i)}/>
                 <div style={this.styles.temperature}>{this.getForecastTemperature(i)}</div>

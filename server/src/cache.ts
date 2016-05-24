@@ -52,7 +52,7 @@ export class Cache {
   
   writeCache(callback: (err?: Error) => void): void {
     try {
-      fs.writeFileSync(this.cacheFilename, JSON.stringify(this.cache));
+      fs.writeFileSync(this.cacheFilename, JSON.stringify(this.cache, null, 2));
       return callback();
     } catch(e) {
       console.error('could not write cache file', e);
