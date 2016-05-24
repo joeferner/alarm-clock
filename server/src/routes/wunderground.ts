@@ -65,7 +65,8 @@ function getWundergroundImageUrl(cacheKey:string,
     return axios.get(url, {responseType: 'arraybuffer'})
       .then((body) => {
         console.log('success: ' + url + ' (status: ' + body.status + ')');
-        return callback(null, new Buffer(body.data).toString('hex'));
+        var bin:any = body.data;
+        return callback(null, new Buffer(bin).toString('hex'));
       })
       .catch((err) => {
         console.error('could not get url: ' + url, err);

@@ -1,20 +1,21 @@
 /// <reference path="../../alarm-clock.d.ts" />
 /// <reference path="./googleCalendar.d.ts" />
 
-import * as express from 'express-serve-static-core';
-import settings from '../settings';
-import * as passport from 'passport';
-import * as async from 'async';
-import cache from '../cache';
+import * as express from "express-serve-static-core";
+import settings from "../settings";
+import * as passport from "passport";
+import * as async from "async";
+import cache from "../cache";
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var gcal = require('google-calendar');
+var refresh = require('passport-oauth2-refresh');
 
 const CACHE_EVENTS_KEY = 'googleCalendar/events';
 
 export default function (app:express.Application) {
-  const config: GoogleCalendarSettings = settings().get('googleCalendar');
+  const config:GoogleCalendarSettings = settings().get('googleCalendar');
 
-  passport.use(new GoogleStrategy({
+  var strategy = new GoogleStrategy({
       clientID: config.clientId,
       clientSecret: config.clientSecret,
       callbackURL: 'http://localhost:8080/googleCalendar/auth/callback',
@@ -22,21 +23,49 @@ export default function (app:express.Application) {
     },
     (accessToken, refreshToken, profile, done) => {
       profile.accessToken = accessToken;
+      profile.refreshToken = refreshToken;
       return done(null, profile);
-    })
-  );
+    });
+  passport.use(strategy);
+  refresh.use(strategy);
 
   app.get('/googleCalendar/auth',
-    passport.authenticate('google', {session: false})
+    passport.authenticate('google', {session: false, accessType: 'offline'})
   );
 
   app.get('/googleCalendar/auth/callback',
     passport.authenticate('google', {session: false, failureRedirect: '/'}),
     function (req:express.Request, res:express.Response, next:express.NextFunction) {
       req.session['access_token'] = req.user.accessToken;
+      req.session['refresh_token'] = req.user.refreshToken;
       res.redirect('/');
     }
   );
+
+  function refreshAccessTokens(req:express.Request, callback:(err?:Error)=>void) {
+    refresh.requestNewAccessToken('google', req.session['refresh_token'], function (err, newAccessToken, refreshToken) {
+      if (err) {
+        return callback(err);
+      }
+      req.session['access_token'] = newAccessToken;
+      req.session['refresh_token'] = refreshToken;
+      return callback();
+    });
+  }
+
+  app.get('/googleCalendar/auth/refresh', function (req:express.Request, res:express.Response, next:express.NextFunction) {
+    if (!req.session || !req.session['refresh_token']) {
+      console.error('missing "refresh_token" in session');
+      return res.sendStatus(401);
+    }
+
+    refreshAccessTokens(req, function (err) {
+      if (err) {
+        return next(err);
+      }
+      return res.send('OK');
+    });
+  });
 
   app.get('/googleCalendar/calendarList', function (req:express.Request, res:express.Response, next:express.NextFunction) {
     if (!req.session || !req.session['access_token']) {
@@ -57,7 +86,7 @@ export default function (app:express.Application) {
       return res.sendStatus(401);
     }
 
-    getEventsForCalendar(req.session['access_token'], calendarId, function(err, data) {
+    getEventsForCalendar(req.session['access_token'], calendarId, function (err, data) {
       if (err) {
         return next(err);
       }
@@ -71,9 +100,19 @@ export default function (app:express.Application) {
     }
 
     cache().get(CACHE_EVENTS_KEY, 60 * 1000, (callback) => {
-      async.map(config.calendars, function (calendarId, callback) {
-        getEventsForCalendar(req.session['access_token'], calendarId, callback);
-      }, function(err, results: GoogleCalendarEventsResponse[]) {
+      async.mapSeries(config.calendars, function (calendarId, callback) {
+        getEventsForCalendar(req.session['access_token'], calendarId, (err, events) => {
+          if (err) {
+            return refreshAccessTokens(req, (err) => {
+              if (err) {
+                return callback(err);
+              }
+              return getEventsForCalendar(req.session['access_token'], calendarId, callback);
+            });
+          }
+          return callback(null, events);
+        });
+      }, function (err, results:GoogleCalendarEventsResponse[]) {
         if (err) {
           if (err.code == 401) {
             return res.sendStatus(401);
@@ -81,7 +120,7 @@ export default function (app:express.Application) {
           return callback(err);
         }
         var allEvents = combineEvents(results);
-        var v: GoogleCalendarEventsResponse = {
+        var v:GoogleCalendarEventsResponse = {
           items: allEvents
         };
         return callback(null, JSON.stringify(v));
@@ -109,7 +148,7 @@ export default function (app:express.Application) {
     return allEvents;
   }
 
-  function getEventsForCalendar(accessToken: string, calendarId: string, callback: (err: Error, data?: GoogleCalendarEventsResponse) => void): void {
+  function getEventsForCalendar(accessToken:string, calendarId:string, callback:(err:Error, data?:GoogleCalendarEventsResponse) => void):void {
     const options = {
       orderBy: 'startTime',
       timeMin: toISODateString(new Date()),
@@ -121,7 +160,7 @@ export default function (app:express.Application) {
         console.error('Could not get calendar events (calendarId: ' + calendarId + ', options: ' + JSON.stringify(options) + ')', err);
         return callback(err);
       }
-      var res: GoogleCalendarEventsResponse = data as GoogleCalendarEventsResponse;
+      var res:GoogleCalendarEventsResponse = data as GoogleCalendarEventsResponse;
       res.items.forEach((item) => {
         item.calendarId = calendarId;
       });
