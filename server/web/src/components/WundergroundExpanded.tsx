@@ -28,6 +28,11 @@ export default class WundergroundExpanded extends WundergroundBase<WundergroundE
       textAlign: 'center'
     },
 
+    radarImage: {
+      width: '300px',
+      height: '200px'
+    },
+
     dayContainer: {
       margin: '5px',
       textAlign: 'center'
@@ -56,7 +61,7 @@ export default class WundergroundExpanded extends WundergroundBase<WundergroundE
           <tbody>
           <tr>
             <td style={this.styles.radarContainer} colSpan="4">
-              <img src="/wunderground/radar.png"/>
+              <img style={this.styles.radarImage} src="/wunderground/radar.png"/>
             </td>
           </tr>
           <tr>

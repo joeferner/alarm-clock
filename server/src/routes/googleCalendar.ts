@@ -99,7 +99,7 @@ export default function (app:express.Application) {
       return res.sendStatus(401);
     }
 
-    cache().get(CACHE_EVENTS_KEY, 60 * 1000, (callback) => {
+    cache().get(CACHE_EVENTS_KEY, 10 * 60 * 1000, (callback) => {
       async.mapSeries(config.calendars, function (calendarId, callback) {
         getEventsForCalendar(req.session['access_token'], calendarId, (err, events) => {
           if (err) {
