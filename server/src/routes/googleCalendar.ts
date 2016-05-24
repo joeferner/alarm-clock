@@ -103,7 +103,7 @@ export default function (app:express.Application) {
       async.mapSeries(config.calendars, function (calendarId, callback) {
         getEventsForCalendar(req.session['access_token'], calendarId, (err, events) => {
           if (err) {
-            return refreshAccessTokens(req, (err) => {
+            return refreshAccessTokens(req, (err?: Error) => {
               if (err) {
                 return callback(err);
               }
