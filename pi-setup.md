@@ -1,3 +1,12 @@
+1. Run `sudo raspi-config` and update locale, keyboard, and timezone.
+
+1. Run `sudo dpkg-reconfigure console-setup` and select:
+
+    * Encoding to use on the console: <UTF-8>
+    * Character set to support: <Guess optimal character set>
+    * Font for the console: Terminus (default is VGA)
+    * Font size: 6x12 (framebuffer only)
+
 1. Add chromium repositories
 
       wget -qO - http://bintray.com/user/downloadSubjectPublicKey?username=bintray | sudo apt-key add -
@@ -9,9 +18,9 @@
 
 1. Install chromium `sudo apt-get install chromium-browser`
 
-1. Install node `sudo apt-get install nodejs npm node-semver`
-
 1. Install unclutter (hide cursor) `sudo apt-get install unclutter`
+
+1. Uninstall old node `sudo apt-get remove nodejs npm node-semver`
 
 1. Install a newer node
 
@@ -21,16 +30,8 @@
       rm node-v6.2.0-linux-armv7l.tar.xz
       sudo ln -s /opt/node-v6.2.0-linux-armv7l /opt/node
       sudo rm /usr/bin/node
-      sudo ln -s /opt/node-v6.2.0-linux-armv7l/bin/node /usr/bin/node
-
-1. Run `sudo raspi-config` and update locale, keyboard, and timezone.
-
-1. Run `sudo dpkg-reconfigure console-setup` and select:
-
-    * Encoding to use on the console: <UTF-8>
-    * Character set to support: <Guess optimal character set>
-    * Font for the console: Terminus (default is VGA)
-    * Font size: 6x12 (framebuffer only)
+      sudo ln -s /opt/node/bin/node /usr/bin/node
+      sudo ln -s /opt/node/bin/npm /usr/bin/npm
 
 1. Add `fbcon=map:10 consoleblank=0` to the end of the line in `/boot/cmdline.txt`
 
