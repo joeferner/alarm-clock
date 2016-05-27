@@ -1,4 +1,4 @@
-1. Run `sudo raspi-config` and update locale, keyboard, and timezone.
+1. Run `sudo raspi-config` and update locale, keyboard, and timezone, enable SPI, disable serial port.
 
 1. Run `sudo dpkg-reconfigure console-setup` and select:
 
@@ -42,6 +42,7 @@
       gpu_mem=256
       dtparam=spi=on
       dtoverlay=tinylcd35,rotate=270,speed=48000000,touch
+      dtoverlay=pi3-miniuart-bt
 
 1. Create a file `/usr/share/X11/xorg.conf.d/99-calibration.conf` with:
 
