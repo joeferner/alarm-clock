@@ -8,3 +8,4 @@ PCB Features:
   - Temperature/Humidity sensor
   - Power distribution
   - Buttons
+  - wake up light
