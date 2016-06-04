@@ -402,10 +402,14 @@ while IFS=, read pos name type signal label
 do
   name=$$(echo $$name | sed -e 's/^"\(.*\)"$$/\1/')
   label=$$(echo $$label | sed -e 's/^"\(.*\)"$$/\1/')
+  altLabel=$$(echo $$signal | sed -e 's/^"\(.*\)"$$/\1/')
+  if [ "$$label" == '' ] || [ "$$label" == 'Label' ]; then
+    label=$${altLabel}
+  fi
   if [ "$$label" != '' ] && [ "$$label" != 'Label' ]; then
     label=$$(echo $${label} | tr a-z A-Z | tr ' ' '_' | tr -cd 'A-Z0-9_')
-    echo "#define PIN_$${label}_PORT GPIO$${name:1:1}"
-    echo "#define PIN_$${label}_PIN GPIO_PIN_$${name:2}"
+    echo "#define $${label}_PORT GPIO$${name:1:1}"
+    echo "#define $${label}_PIN GPIO_PIN_$${name:2}"
   fi
 done < "$${1:-/dev/stdin}"
 endef

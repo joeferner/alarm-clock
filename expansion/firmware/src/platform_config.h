@@ -8,6 +8,7 @@
 
 #ifdef DEBUG
 #  define UTILS_DEBUG /* print assert statements */
+#  define SI473X_DEBUG
 #endif
 #define DEBUG_UART       huart1
 #define MAX_TIMEOUT      0xffff
@@ -19,6 +20,7 @@
 #endif
 
 extern UART_HandleTypeDef huart1;
+extern SPI_HandleTypeDef hspi1;
 
 #endif
 
