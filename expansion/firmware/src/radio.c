@@ -6,6 +6,7 @@ SI473X _si473x;
 
 HAL_StatusTypeDef radio_setup() {
   HAL_StatusTypeDef ret;
+  SI473X_Status status;
   
   _si473x.spi = &hspi1;
   _si473x.csPort = SI473X_CS_PORT;
@@ -22,7 +23,9 @@ HAL_StatusTypeDef radio_setup() {
     return ret;
   }
 
-  ret = SI473X_powerUp(&_si473x, SI473X_POWER_UP_ARG1_CTSIEN, 0);
+  uint8_t powerUpArg1 = SI473X_POWER_UP_ARG1_FUNC_RX | SI473X_POWER_UP_ARG1_CTSIEN;
+  uint8_t powerUpArg2 = SI473X_POWER_UP_ARG2_OPMODE_ANALOG_AUDIO_OUT;
+  ret = SI473X_powerUp(&_si473x, powerUpArg1, powerUpArg2, &status);
   if (ret != HAL_OK) {
     DEBUG_OUT("SI473X_powerUp failed: 0x%02x\n", ret);
     return ret;
