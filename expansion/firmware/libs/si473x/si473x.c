@@ -144,7 +144,10 @@ HAL_StatusTypeDef _SI473X_spiWriteCommandRead1(SI473X* si473x, uint8_t cmd, void
   }  
   _SI473X_deassertCS(si473x);
   
-  return ret;
+  if (ret != HAL_OK) {
+    return ret;
+  }
+  return _SI473X_statusToHALStatus(status);
 }
 
 HAL_StatusTypeDef _SI473X_spiWriteCommandRead16(SI473X* si473x, uint8_t cmd, void* args, uint8_t argsLength, void* rxBuffer, uint8_t rxBufferLength) {
@@ -157,53 +160,42 @@ HAL_StatusTypeDef _SI473X_spiWriteCommandRead16(SI473X* si473x, uint8_t cmd, voi
   }  
   _SI473X_deassertCS(si473x);
   
-  return ret;
+  if (ret != HAL_OK) {
+    return ret;
+  }
+  return _SI473X_statusToHALStatus(&((uint8_t*)rxBuffer)[0]);
 }
 
 HAL_StatusTypeDef SI473X_powerUp(SI473X* si473x, uint8_t arg1, uint8_t arg2, SI473X_Status* status) {
-  HAL_StatusTypeDef ret;
-  uint8_t args[2] = { arg1, arg2 };
+  SI473X_PowerUpArgs args;
+  args.arg1 = arg1;
+  args.arg2 = arg2;
   if (testBits(arg1, SI473X_POWER_UP_ARG1_FUNC_QUERY_LIB_ID)) {
     SI473X_DEBUG_OUT("invalid call, use SI473X_powerUpQueryLibraryId\n");
     return HAL_ERROR;
   } else {
-    ret = _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_POWER_UP, args, 2, status);
+    return _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_POWER_UP, &args, sizeof(SI473X_PowerUpArgs), status);
   }
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(status);
 }
 
 HAL_StatusTypeDef SI473X_powerUpQueryLibraryId(SI473X* si473x, uint8_t arg1, uint8_t arg2, SI473X_PowerUpQueryLibraryIdResponse* response) {
-  HAL_StatusTypeDef ret;
-  uint8_t args[2] = { arg1, arg2 };
+  SI473X_PowerUpArgs args;
+  args.arg1 = arg1;
+  args.arg2 = arg2;
   if (testBits(arg1, SI473X_POWER_UP_ARG1_FUNC_QUERY_LIB_ID)) {
-    ret = _SI473X_spiWriteCommandRead16(si473x, SI473X_CMD_POWER_UP, args, 2, response, sizeof(SI473X_PowerUpQueryLibraryIdResponse));
+    return _SI473X_spiWriteCommandRead16(si473x, SI473X_CMD_POWER_UP, &args, sizeof(SI473X_PowerUpArgs), response, sizeof(SI473X_PowerUpQueryLibraryIdResponse));
   } else {
     SI473X_DEBUG_OUT("invalid call, use SI473X_powerUp\n");
     return HAL_ERROR;
   }
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(&response->status);
 }
 
 HAL_StatusTypeDef SI473X_getRev(SI473X* si473x, SI473X_GetRevResponse* response) {
-  HAL_StatusTypeDef ret = _SI473X_spiWriteCommandRead16(si473x, SI473X_CMD_GET_REV, NULL, 0, response, sizeof(response));
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(&response->status);
+  return _SI473X_spiWriteCommandRead16(si473x, SI473X_CMD_GET_REV, NULL, 0, response, sizeof(response));
 }
 
 HAL_StatusTypeDef SI473X_powerDown(SI473X* si473x, SI473X_Status* status) {
-  HAL_StatusTypeDef ret = _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_POWER_DOWN, NULL, 0, status);
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(status);
+  return _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_POWER_DOWN, NULL, 0, status);
 }
 
 HAL_StatusTypeDef SI473X_setProperty(SI473X* si473x, uint16_t property, uint16_t value, SI473X_Status* status) {
@@ -211,171 +203,18 @@ HAL_StatusTypeDef SI473X_setProperty(SI473X* si473x, uint16_t property, uint16_t
   args.reserved = 0;
   args.property = property;
   args.value = value;
-  HAL_StatusTypeDef ret = _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_SET_PROPERTY, &args, sizeof(SI473X_SetPropertyArgs), status);
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(status);
+  return _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_SET_PROPERTY, &args, sizeof(SI473X_SetPropertyArgs), status);
 }
 
 HAL_StatusTypeDef SI473X_getProperty(SI473X* si473x, uint16_t property, SI473X_GetPropertyReponse* response) {
   SI473X_GetPropertyArgs args;
   args.reserved = 0;
   args.property = property;
-  HAL_StatusTypeDef ret = _SI473X_spiWriteCommandRead16(si473x, SI473X_CMD_GET_PROPERTY, &args, sizeof(SI473X_GetPropertyArgs), response, sizeof(SI473X_GetPropertyReponse));
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(&response->status);
+  return _SI473X_spiWriteCommandRead16(si473x, SI473X_CMD_GET_PROPERTY, &args, sizeof(SI473X_GetPropertyArgs), response, sizeof(SI473X_GetPropertyReponse));
 }
 
 HAL_StatusTypeDef SI473X_getIntStatus(SI473X* si473x, SI473X_Status* status) {
-  HAL_StatusTypeDef ret = _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_GET_INT_STATUS, NULL, 0, status);
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(status);
-}
-
-HAL_StatusTypeDef SI473X_txTuneFreq(SI473X* si473x, uint16_t frequency, SI473X_Status* status) {
-  SI473X_TxTuneFreqArgs args;
-  args.reserved = 0;
-  args.frequency = frequency;
-  HAL_StatusTypeDef ret = _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_TX_TUNE_FREQ, &args, sizeof(SI473X_SetPropertyArgs), status);
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(status);
-}
-
-HAL_StatusTypeDef SI473X_txTunePower(SI473X* si473x, uint16_t power, SI473X_Status* status) {
-  SI473X_TxTunePowerArgs args;
-  args.reserved = 0;
-  args.power = power;
-  HAL_StatusTypeDef ret = _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_TX_TUNE_POWER, &args, sizeof(SI473X_TxTunePowerArgs), status);
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(status);
-}
-
-HAL_StatusTypeDef SI473X_txTuneMeasure(SI473X* si473x, uint16_t frequency, uint8_t antennaCapacitor, SI473X_Status* status) {
-  SI473X_TxTuneMeasureArgs args;
-  args.reserved = 0;
-  args.frequency = frequency;
-  args.antennaTuningCapacitor = antennaCapacitor;
-  HAL_StatusTypeDef ret = _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_TX_TUNE_MEASURE, &args, sizeof(SI473X_TxTuneMeasureArgs), status);
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(status);
-}
-
-HAL_StatusTypeDef SI473X_txTuneStatus(SI473X* si473x, bool interruptClear, SI473X_TxTuneStatusResponse* status) {
-  SI473X_TxTuneStatusArgs args;
-  args.reserved = 0;
-  args.arg1 = interruptClear ? SI473X_TX_TUNE_STATUS_ARG1_INTACK : 0;
-  HAL_StatusTypeDef ret = _SI473X_spiWriteCommandRead16(
-    si473x, 
-    SI473X_CMD_TX_TUNE_STATUS, 
-    &args, sizeof(SI473X_TxTuneStatusArgs), 
-    status, sizeof(SI473X_TxTuneStatusResponse)
-  );
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(&status->status);
-}
-
-HAL_StatusTypeDef SI473X_txAsqStatus(SI473X* si473x, bool interruptAck, SI473X_TxAsqStatusResponse* status) {
-  SI473X_TxAsqStatusArgs args;
-  args.reserved = 0;
-  args.arg1 = interruptAck ? SI473X_TX_ASQ_STATUS_ARG1_INTACK : 0;
-  HAL_StatusTypeDef ret = _SI473X_spiWriteCommandRead16(
-    si473x, 
-    SI473X_CMD_TX_ASQ_STATUS, 
-    &args, sizeof(SI473X_TxAsqStatusArgs), 
-    status, sizeof(SI473X_TxAsqStatusResponse)
-  );
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(&status->status);
-}
-
-HAL_StatusTypeDef SI473X_txRdsBuffer(
-  SI473X* si473x,
-  SI473X_TxRdsBufferArgs* args,
-  SI473X_TxRdsBufferResponse* status
-) {
-  HAL_StatusTypeDef ret = _SI473X_spiWriteCommandRead16(
-    si473x, 
-    SI473X_CMD_TX_ASQ_STATUS, 
-    args, sizeof(SI473X_TxRdsBufferArgs), 
-    status, sizeof(SI473X_TxRdsBufferResponse)
-  );
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(&status->status);
-}
-
-HAL_StatusTypeDef SI473X_txRdsPs(
-  SI473X* si473x,
-  uint8_t psid,
-  uint8_t* psChar,
-  SI473X_Status* status
-) {
-  SI473X_TxRdsPsArgs args;
-  args.reserved = 0;
-  args.psid = psid & 0x0f;
-  args.psChar[0] = psChar[0];
-  args.psChar[1] = psChar[1];
-  args.psChar[2] = psChar[2];
-  args.psChar[3] = psChar[3];
-  HAL_StatusTypeDef ret = _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_TX_RDS_PS, &args, sizeof(SI473X_TxRdsPsArgs), status);
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(status);
-}
-
-HAL_StatusTypeDef SI473X_gpioCtl(
-  SI473X* si473x,
-  bool gpo1OutputEnable,
-  bool gpo2OutputEnable,
-  bool gpo3OutputEnable,
-  SI473X_Status* status
-) {
-  SI473X_GpioCtlArgs args;
-  args.arg1 = 
-    (gpo1OutputEnable ? SI473X_GPIO_CTL_ARG1_GPO1OEN : 0)
-    | (gpo2OutputEnable ? SI473X_GPIO_CTL_ARG1_GPO2OEN : 0)
-    | (gpo3OutputEnable ? SI473X_GPIO_CTL_ARG1_GPO3OEN : 0);
-  HAL_StatusTypeDef ret = _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_GPIO_CTL, &args, sizeof(SI473X_GpioCtlArgs), status);
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(status);
-}
-
-HAL_StatusTypeDef SI473X_gpioSet(
-  SI473X* si473x,
-  bool gpo1,
-  bool gpo2,
-  bool gpo3,
-  SI473X_Status* status
-) {
-  SI473X_GpioSetArgs args;
-  args.arg1 = 
-    (gpo1 ? SI473X_GPIO_SET_ARG1_GPO1LEVEL : 0)
-    | (gpo2 ? SI473X_GPIO_SET_ARG1_GPO2LEVEL : 0)
-    | (gpo3 ? SI473X_GPIO_SET_ARG1_GPO3LEVEL : 0);
-  HAL_StatusTypeDef ret = _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_GPIO_SET, &args, sizeof(SI473X_GpioSetArgs), status);
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(status);
+  return _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_GET_INT_STATUS, NULL, 0, status);
 }
 
 HAL_StatusTypeDef SI473X_fmTuneFreq(
@@ -392,11 +231,7 @@ HAL_StatusTypeDef SI473X_fmTuneFreq(
     | (fast ? SI473X_FM_TUNE_FREQ_ARG1_FAST : 0);
   args.frequency = frequency;
   args.antennaCapacitor = antCap;
-  HAL_StatusTypeDef ret = _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_FM_TUNE_FREQ, &args, sizeof(SI473X_FmTuneFreqArgs), status);
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(status);
+  return _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_FM_TUNE_FREQ, &args, sizeof(SI473X_FmTuneFreqArgs), status);
 }
 
 HAL_StatusTypeDef SI473X_fmSeekStart(
@@ -409,11 +244,7 @@ HAL_StatusTypeDef SI473X_fmSeekStart(
   args.arg1 = 
     (seekUp ? SI473X_FM_TUNE_FREQ_ARG1_SEEKUP : 0)
     | (wrap ? SI473X_FM_TUNE_FREQ_ARG1_WRAP : 0);
-  HAL_StatusTypeDef ret = _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_FM_SEEK_START, &args, sizeof(SI473X_FmSeekStartArgs), status);
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(status);
+  return _SI473X_spiWriteCommandRead1(si473x, SI473X_CMD_FM_SEEK_START, &args, sizeof(SI473X_FmSeekStartArgs), status);
 }
 
 HAL_StatusTypeDef SI473X_fmTuneStatus(
@@ -426,14 +257,10 @@ HAL_StatusTypeDef SI473X_fmTuneStatus(
   args.arg1 =
     (cancel ? SI473X_FM_TUNE_STATUS_ARG1_CANCEL : 0)
     | (intAck ? SI473X_FM_TUNE_STATUS_ARG1_INTACK : 0);
-  HAL_StatusTypeDef ret = _SI473X_spiWriteCommandRead16(
+  return _SI473X_spiWriteCommandRead16(
     si473x, 
     SI473X_CMD_FM_TUNE_STATUS, 
     &args, sizeof(SI473X_FmTuneStatusArgs), 
     status, sizeof(SI473X_FmTuneStatusResponse)
   );
-  if (ret != HAL_OK) {
-    return ret;
-  }
-  return _SI473X_statusToHALStatus(&status->status);
 }

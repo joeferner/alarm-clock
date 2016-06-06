@@ -30,6 +30,13 @@ HAL_StatusTypeDef radio_setup() {
     DEBUG_OUT("SI473X_powerUp failed: 0x%02x\n", ret);
     return ret;
   }
+
+  uint16_t freq = SI473X_fmFrequencyToUint16(101.1);
+  ret = SI473X_fmTuneFreq(&_si473x, false, false, freq, 0, &status);
+  if (ret != HAL_OK) {
+    DEBUG_OUT("SI473X_fmTuneFreq failed: 0x%02x\n", ret);
+    return ret;
+  }
   
   return HAL_OK;
 }

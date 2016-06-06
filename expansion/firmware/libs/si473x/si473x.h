@@ -20,9 +20,15 @@
 #define SI473X_CMD_SET_PROPERTY    0x12
 #define SI473X_CMD_GET_PROPERTY    0x13
 #define SI473X_CMD_GET_INT_STATUS  0x14
+#define SI473X_CMD_PATCH_ARGS      0x15
+#define SI473X_CMD_PATCH_DATA      0x16
 #define SI473X_CMD_FM_TUNE_FREQ    0x20
 #define SI473X_CMD_FM_SEEK_START   0x21
 #define SI473X_CMD_FM_TUNE_STATUS  0x22
+#define SI473X_CMD_FM_RSQ_STATUS   0x23
+#define SI473X_CMD_FM_RDS_STATUS   0x24
+#define SI473X_CMD_FM_AGC_STATUS   0x27
+#define SI473X_CMD_FM_AGC_OVERRIDE 0x28
 #define SI473X_CMD_TX_TUNE_FREQ    0x30
 #define SI473X_CMD_TX_TUNE_POWER   0x31
 #define SI473X_CMD_TX_TUNE_MEASURE 0x32
@@ -30,8 +36,85 @@
 #define SI473X_CMD_TX_ASQ_STATUS   0x34
 #define SI473X_CMD_TX_RDS_BUFF     0x35
 #define SI473X_CMD_TX_RDS_PS       0x36
+#define SI473X_CMD_AM_TUNE_FREQ    0x40
+#define SI473X_CMD_AM_SEEK_START   0x41
+#define SI473X_CMD_AM_TUNE_STATUS  0x42
+#define SI473X_CMD_AM_RSQ_STATUS   0x43
+#define SI473X_CMD_AM_AGC_STATUS   0x47
+#define SI473X_CMD_AM_AGC_OVERRIDE 0x48
+#define SI473X_CMD_WB_TUNE_FREQ    0x50
+#define SI473X_CMD_WB_TUNE_STATUS  0x52
+#define SI473X_CMD_WB_RSQ_STATUS   0x53
+#define SI473X_CMD_WB_SAME_STATUS  0x54
+#define SI473X_CMD_WB_ASQ_STATUS   0x55
+#define SI473X_CMD_WB_AGC_STATUS   0x57
+#define SI473X_CMD_WB_AGC_OVERRIDE 0x58
 #define SI473X_CMD_GPIO_CTL        0x80
 #define SI473X_CMD_GPIO_SET        0x81
+
+#define SI473X_PROP_GPO_IEN                       0x0001
+#define SI473X_PROP_DIGITAL_OUTPUT_FORMAT         0x0102
+#define SI473X_PROP_DIGITAL_OUTPUT_SAMPLE_RATE    0x0104
+#define SI473X_PROP_REFCLK_FREQ                   0x0201
+#define SI473X_PROP_REFCLK_PRESCALE               0x0202
+#define SI473X_PROP_FM_DEEMPHASIS                 0x1100
+#define SI473X_PROP_FM_CHANNEL_FILTER             0x1102
+#define SI473X_PROP_FM_BLEND_STEREO_THRESHOLD     0x1105
+#define SI473X_PROP_FM_BLEND_MONO_THRESHOLD       0x1106
+#define SI473X_PROP_FM_ANTENNA_INPUT              0x1107
+#define SI473X_PROP_FM_MAX_TUNE_ERROR             0x1108
+#define SI473X_PROP_FM_RSQ_INT_SOURCE             0x1200
+#define SI473X_PROP_FM_RSQ_SNR_HI_THRESHOLD       0x1201
+#define SI473X_PROP_FM_RSQ_SNR_LO_THRESHOLD       0x1202
+#define SI473X_PROP_FM_RSQ_RSSI_HI_THRESHOLD      0x1203
+#define SI473X_PROP_FM_RSQ_RSSI_LO_THRESHOLD      0x1204
+#define SI473X_PROP_FM_RSQ_MULTIPATH_HI_THRESHOLD 0x1205
+#define SI473X_PROP_FM_RSQ_MULTIPATH_LO_THRESHOLD 0x1206
+#define SI473X_PROP_FM_RSQ_BLEND_THRESHOLD        0x1207
+#define SI473X_PROP_FM_SOFT_MUTE_RATE             0x1300
+#define SI473X_PROP_FM_SOFT_MUTE_SLOPE            0x1301
+#define SI473X_PROP_FM_SOFT_MUTE_MAX_ATTENUATION  0x1302
+#define SI473X_PROP_FM_SOFT_MUTE_SNR_THRESHOLD    0x1303
+#define SI473X_PROP_FM_SOFT_MUTE_RELEASE_RATE     0x1304
+#define SI473X_PROP_FM_SOFT_MUTE_ATTACH_RATE      0x1305
+#define SI473X_PROP_FM_SEEK_BAND_BOTTOM           0x1400
+#define SI473X_PROP_FM_SEEK_BAND_TOP              0x1401
+#define SI473X_PROP_FM_SEEK_FREQ_SPACING          0x1402
+#define SI473X_PROP_FM_SEEK_TUNE_SNR_THRESHOLD    0x1403
+#define SI473X_PROP_FM_SEEK_TUNE_RSSI_THRESHOLD   0x1404
+#define SI473X_PROP_FM_RDS_INT_SOURCE             0x1500
+#define SI473X_PROP_FM_RDS_INT_FIFO_COUNT         0x1501
+#define SI473X_PROP_FM_RDS_CONFIG                 0x1502
+#define SI473X_PROP_FM_RDS_CONFIDENCE             0x1503
+#define SI473X_PROP_FM_AGC_ATTACK_RATE            0x1700
+#define SI473X_PROP_FM_AGC_RELEASE_RATE           0x1701
+#define SI473X_PROP_FM_BLEND_RSSI_STEREO_THRESHOLD 0x1800
+#define SI473X_PROP_FM_BLEND_RSSI_MONO_THRESHOLD  0x1801
+#define SI473X_PROP_FM_BLEND_RSSI_ATTACK_RATE     0x1802
+#define SI473X_PROP_FM_BLEND_RSSI_RELEASE_RATE    0x1803
+#define SI473X_PROP_FM_BLEND_SNR_STEREO_THRESHOLD 0x1804
+#define SI473X_PROP_FM_BLEND_SNR_MONO_THRESHOLD   0x1805
+#define SI473X_PROP_FM_BLEND_SNR_ATTACH_RATE      0x1806
+#define SI473X_PROP_FM_BLEND_SNR_RELEASE_RATE     0x1807
+#define SI473X_PROP_FM_BLEND_MULTIPATH_STEREO_THRESHOLD 0x1808
+#define SI473X_PROP_FM_BLEND_MULTIPATH_MONO_THRESHOLD   0x1809
+#define SI473X_PROP_FM_BLEND_MULTIPATH_ATTACH_RATE      0x180a
+#define SI473X_PROP_FM_BLEND_MULTIPATH_RELEASE_RATE     0x180b
+#define SI473X_PROP_FM_BLEND_MAX_STEREO_SEPERATION      0x180c
+#define SI473X_PROP_FM_NB_DETECT_THRESHOLD        0x1900
+#define SI473X_PROP_FM_NB_INTERVAL                0x1901
+#define SI473X_PROP_FM_NB_RATE                    0x1902
+#define SI473X_PROP_FM_NB_IIR_FILTER              0x1903
+#define SI473X_PROP_FM_NB_DELAY                   0x1904
+#define SI473X_PROP_FM_HICUT_SNR_HIGH_THRESHOLD   0x1a00
+#define SI473X_PROP_FM_HICUT_SNR_LOW_THRESHOLD    0x1a01
+#define SI473X_PROP_FM_HICUT_ATTACH_RATE          0x1a02
+#define SI473X_PROP_FM_HICUT_RELEASE_RATE         0x1a03
+#define SI473X_PROP_FM_HICUT_MULTIPATH_TRIGGER_THRESHOLD 0x1a04
+#define SI473X_PROP_FM_HICUT_MULTIPATH_END_THRESHOLD     0x1a05
+#define SI473X_PROP_FM_HICUT_CUTOFF_FREQUENCY     0x1a06
+#define SI473X_PROP_RX_VOLUME                     0x4000
+#define SI473X_PROP_RX_HARD_MUTE                  0x4001
 
 typedef uint8_t SI473X_Status;
 #define SI473X_STATUS_CTS    0b10000000 //< Clear to Send
@@ -55,6 +138,11 @@ typedef uint8_t SI473X_Status;
 #define SI473X_POWER_UP_ARG2_OPMODE_A_AND_D_AUDIO_OUT  0b10110101 //< Analog and digital audio outputs (LOUT/ROUT and DCLK, DFS, DIO)
 #define SI473X_POWER_UP_ARG2_OPMODE_ANALOG_AUDIO_IN    0b01010000 //< Analog audio inputs (LIN/RIN)
 #define SI473X_POWER_UP_ARG2_OPMODE_DIGITAL_AUDIO_IN   0b00001111 //< Digital audio inputs (DIN/DFS/DCLK)
+
+typedef struct {
+  uint8_t arg1;
+  uint8_t arg2;
+} SI473X_PowerUpArgs;
 
 typedef struct {
   SI473X_Status status;
@@ -94,100 +182,6 @@ typedef struct {
   uint8_t reserved;
   uint16_t value;
 } SI473X_GetPropertyReponse;
-
-typedef struct {
-  uint8_t reserved;
-  uint16_t frequency;
-} SI473X_TxTuneFreqArgs;
-
-typedef struct {
-  uint8_t reserved;
-  uint16_t power;
-} SI473X_TxTunePowerArgs;
-
-typedef struct {
-  uint8_t reserved;
-  uint16_t frequency;
-  uint8_t antennaTuningCapacitor;
-} SI473X_TxTuneMeasureArgs;
-
-typedef struct {
-  uint8_t reserved;
-  uint8_t arg1;
-} SI473X_TxTuneStatusArgs;
-#define SI473X_TX_TUNE_STATUS_ARG1_INTACK 0b00000001
-
-typedef struct {
-  SI473X_Status status;
-  uint8_t reserved0;
-  uint16_t readFrequency;
-  uint8_t reserved1;
-  uint8_t readRfDb;
-  uint8_t readAntCap;
-  uint8_t rnl;
-} SI473X_TxTuneStatusResponse;
-
-typedef struct {
-  uint8_t reserved;
-  uint8_t arg1;
-} SI473X_TxAsqStatusArgs;
-#define SI473X_TX_ASQ_STATUS_ARG1_INTACK 0b00000001
-
-typedef struct {
-  SI473X_Status status;
-  uint8_t resp1;
-  uint8_t reserved0;
-  uint8_t reserved1;
-  uint8_t inputAudioLevel;
-} SI473X_TxAsqStatusResponse;
-#define SI473X_TX_ASQ_STATUS_RESP1_OVERMOD 0b00000100
-#define SI473X_TX_ASQ_STATUS_RESP1_IALH    0b00000010
-#define SI473X_TX_ASQ_STATUS_RESP1_IALL    0b00000001
-
-typedef struct {
-  uint8_t arg1;
-  uint16_t rdsBlockB;
-  uint16_t rdsBlockC;
-  uint16_t rdsBlockD;
-} SI473X_TxRdsBufferArgs;
-#define SI473X_TX_RDS_BUFF_ARG1_FIFO   0b10000000
-#define SI473X_TX_RDS_BUFF_ARG1_LDBUFF 0b00000100
-#define SI473X_TX_RDS_BUFF_ARG1_MTBUFF 0b00000010
-#define SI473X_TX_RDS_BUFF_ARG1_INTACK 0b00000001
-
-typedef struct {
-  SI473X_Status status;
-  uint8_t resp1;
-  uint8_t cbAvail;
-  uint8_t cbUsed;
-  uint8_t fifoAvail;
-  uint8_t fifoUsed;
-} SI473X_TxRdsBufferResponse;
-#define SI473X_TX_RDS_BUFF_RESP1_RDSPSXMIT 0b00010000
-#define SI473X_TX_RDS_BUFF_RESP1_CBUFXMIT  0b00001000
-#define SI473X_TX_RDS_BUFF_RESP1_FIFOXMIT  0b00000100
-#define SI473X_TX_RDS_BUFF_RESP1_CBUFWRAP  0b00000010
-#define SI473X_TX_RDS_BUFF_RESP1_FIFOMT    0b00000001
-
-typedef struct {
-  uint8_t reserved;
-  uint8_t psid;
-  uint8_t psChar[4];
-} SI473X_TxRdsPsArgs;
-
-typedef struct {
-  uint8_t arg1;
-} SI473X_GpioCtlArgs;
-#define SI473X_GPIO_CTL_ARG1_GPO3OEN 0b00001000
-#define SI473X_GPIO_CTL_ARG1_GPO2OEN 0b00000100
-#define SI473X_GPIO_CTL_ARG1_GPO1OEN 0b00000010
-
-typedef struct {
-  uint8_t arg1;
-} SI473X_GpioSetArgs;
-#define SI473X_GPIO_SET_ARG1_GPO3LEVEL 0b00001000
-#define SI473X_GPIO_SET_ARG1_GPO2LEVEL 0b00000100
-#define SI473X_GPIO_SET_ARG1_GPO1LEVEL 0b00000010
 
 typedef struct {
   uint8_t arg1;
@@ -246,65 +240,6 @@ HAL_StatusTypeDef SI473X_powerDown(SI473X* si473x, SI473X_Status* status);
 HAL_StatusTypeDef SI473X_setProperty(SI473X* si473x, uint16_t property, uint16_t value, SI473X_Status* status);
 HAL_StatusTypeDef SI473X_getProperty(SI473X* si473x, uint16_t property, SI473X_GetPropertyReponse* response);
 HAL_StatusTypeDef SI473X_getIntStatus(SI473X* si473x, SI473X_Status* status);
-
-/**
- * @param frequency Tune Frequency. Selects the tune frequency in units of 10 kHz. The valid range is from 7600
- *                  to 10800 (76–108 MHz). The frequency must be a multiple of 50 kHz. See SI473X_fmFrequencyToUint16
- */
-HAL_StatusTypeDef SI473X_txTuneFreq(SI473X* si473x, uint16_t frequency, SI473X_Status* status);
-
-/**
- * @param power Tune Power. Sets the tune power in dBμV in 1 dB steps. The valid range is from 88–115 dBμV.
- *              Power may be set as high as 120 dBμV; however, voltage accuracy is not guaranteed.
- */
-HAL_StatusTypeDef SI473X_txTunePower(SI473X* si473x, uint16_t power, SI473X_Status* status);
-
-/**
- * @param frequency Tune Frequency. Selects the tune frequency in units of 10 kHz. In FM mode the valid range
- *                  is from 7600 to 10800 (76–108 MHz). The frequency must be a multiple of 50 kHz.
- * @param antennaCapacitor Antenna Tuning Capacitor. This selects the value of the antenna tuning capacitor
- *                         manually, or automatic if set to zero. The valid range is 0–191.
- */
-HAL_StatusTypeDef SI473X_txTuneMeasure(SI473X* si473x, uint16_t frequency, uint8_t antennaCapacitor, SI473X_Status* status);
-
-/**
- * @param interruptClear Seek/Tune Interrupt Clear. If set clears the seek/tune complete interrupt status indicator.
- */
-HAL_StatusTypeDef SI473X_txTuneStatus(SI473X* si473x, bool interruptClear, SI473X_TxTuneStatusResponse* status);
-
-/**
- * @param interruptAck Clears ASQINT, OVERMOD, IALDH, and IALDL.
- */
-HAL_StatusTypeDef SI473X_txAsqStatus(SI473X* si473x, bool interruptAck, SI473X_TxAsqStatusResponse* status);
-
-HAL_StatusTypeDef SI473X_txRdsBuffer(
-  SI473X* si473x,
-  SI473X_TxRdsBufferArgs* args,
-  SI473X_TxRdsBufferResponse* status
-);
-
-HAL_StatusTypeDef SI473X_txRdsPs(
-  SI473X* si473x,
-  uint8_t psid,
-  uint8_t* psChar,
-  SI473X_Status* status
-);
-
-HAL_StatusTypeDef SI473X_gpioCtl(
-  SI473X* si473x,
-  bool gpo1OutputEnable,
-  bool gpo2OutputEnable,
-  bool gpo3OutputEnable,
-  SI473X_Status* status
-);
-
-HAL_StatusTypeDef SI473X_gpioSet(
-  SI473X* si473x,
-  bool gpo1,
-  bool gpo2,
-  bool gpo3,
-  SI473X_Status* status
-);
 
 /**
  * @param freeze    Freeze Metrics During Alternate Frequency Jump. If set will cause
