@@ -19,8 +19,8 @@ HAL_StatusTypeDef radio_setup() {
   _si473x.resetPin = SI473X_RESET_PIN;
   _si473x.interruptPort = SI473X_INT_PORT;
   _si473x.interruptPin = SI473X_INT_PIN;
-  // TODO: SPI Disable: _si473x.gpo1Port = SPI1_MISO_PORT;
-  // TODO: SPI Disable: _si473x.gpo1Pin = SPI1_MISO_PIN;
+  _si473x.gpo1Port = SPI1_MISO_PORT;
+  _si473x.gpo1Pin = SPI1_MISO_PIN;
   ret = SI473X_setup(&_si473x);
   if (ret != HAL_OK) {
     DEBUG_OUT("SI473X_setup failed: 0x%02x\n", ret);

@@ -4,8 +4,6 @@
 #include <utils/utils.h>
 #include <string.h>
 
-// TODO: SPI Disable: Let's try initializing without disabling SPI first
-
 #define SI473X_SPI_CONTROL_WRITE_CMD   0x48
 #define SI473X_SPI_CONTROL_READ1_SDIO  0x80
 #define SI473X_SPI_CONTROL_READ16_SDIO 0xc0
@@ -18,31 +16,52 @@ void _SI473X_assertCS(SI473X* si473x);
 void _SI473X_deassertCS(SI473X* si473x);
 HAL_StatusTypeDef _SI473X_statusToHALStatus(SI473X_Status* status);
 HAL_StatusTypeDef _SI473X_spiWriteCommand(SI473X* si473x, uint8_t cmd, uint8_t* args, uint8_t argsLength);
+HAL_StatusTypeDef _SI473X_spiTxRx(SI473X* si473x, uint8_t* tx, uint8_t* rx, uint8_t length);
 HAL_StatusTypeDef _SI473X_read1(SI473X* si473x, SI473X_Status* status);
 HAL_StatusTypeDef _SI473X_read16(SI473X* si473x, uint8_t* rxBuffer, uint8_t rxBufferLength);
 HAL_StatusTypeDef _SI473X_spiWriteCommandRead1(SI473X* si473x, uint8_t cmd, void* args, uint8_t argsLength, SI473X_Status* status);
 HAL_StatusTypeDef _SI473X_spiWriteCommandRead16(SI473X* si473x, uint8_t cmd, void* args, uint8_t argsLength, void* rxBuffer, uint8_t rxBufferLength);
 
 HAL_StatusTypeDef SI473X_setup(SI473X* si473x) {
-  // TODO: SPI Disable: GPIO_InitTypeDef gpo1Gpio;
+  GPIO_InitTypeDef gpo1Gpio;
+  GPIO_InitTypeDef gpo2Gpio;
   
-  // TODO: SPI Disable: HAL_SPI_DeInit(si473x->spi);
+  HAL_SPI_DeInit(si473x->spi);
+  HAL_GPIO_DeInit(si473x->gpo1Port, si473x->gpo1Pin);
+  HAL_GPIO_DeInit(si473x->interruptPort, si473x->interruptPin);
+  
   _SI473X_deassertCS(si473x);
   sleep_ms(10);
   _SI473X_assertReset(si473x);
   
-  // Set SI473X GPO1 pin to input and pull up to enable SPI mode
-  // TODO: SPI Disable: gpo1Gpio.Pin = si473x->gpo1Pin;
-  // TODO: SPI Disable: gpo1Gpio.Mode = GPIO_MODE_INPUT;
-  // TODO: SPI Disable: gpo1Gpio.Pull = GPIO_PULLUP;
-  // TODO: SPI Disable: HAL_GPIO_Init(si473x->gpo1Port, &gpo1Gpio);
+  // Set SI473X GPO1 and GPO2 pin to output and pull up to enable SPI mode
+  gpo1Gpio.Mode = GPIO_MODE_OUTPUT_PP;
+  gpo1Gpio.Pin = si473x->gpo1Pin;
+  gpo1Gpio.Pull = GPIO_NOPULL;
+  gpo1Gpio.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(si473x->gpo1Port, &gpo1Gpio);
+
+  gpo2Gpio.Mode = GPIO_MODE_OUTPUT_PP;
+  gpo2Gpio.Pin = si473x->interruptPin;
+  gpo2Gpio.Pull = GPIO_NOPULL;
+  gpo2Gpio.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(si473x->interruptPort, &gpo2Gpio);
+
+  HAL_GPIO_WritePin(si473x->gpo1Port, si473x->gpo1Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(si473x->interruptPort, si473x->interruptPin, GPIO_PIN_SET);
   
   sleep_ms(10);
   _SI473X_deassertReset(si473x);
   sleep_ms(10);
   
-  // TODO: SPI Disable: HAL_GPIO_DeInit(si473x->gpo1Port, &gpo1Gpio);
-  // TODO: SPI Disable: HAL_SPI_Init(si473x->spi);
+  gpo1Gpio.Mode = GPIO_MODE_INPUT;
+  HAL_GPIO_Init(si473x->gpo1Port, &gpo1Gpio);
+
+  gpo2Gpio.Mode = GPIO_MODE_IT_RISING;
+  HAL_GPIO_Init(si473x->interruptPort, &gpo2Gpio);
+
+  HAL_GPIO_DeInit(si473x->gpo1Port, si473x->gpo1Pin);
+  HAL_SPI_Init(si473x->spi);
 
   return HAL_OK;
 }
@@ -50,8 +69,8 @@ HAL_StatusTypeDef SI473X_setup(SI473X* si473x) {
 void SI473X_tick(SI473X* si473x) {
 }
 
-uint16_t SI473X_fmFrequencyToUint16(float frequency) {
-  uint16_t f = frequency / 10000.0f;
+uint16_t SI473X_fmFrequencyToUint16(uint32_t frequency) {
+  uint16_t f = frequency / 10000;
   // TODO round to 50kHz?
   return f;
 }
@@ -76,6 +95,22 @@ HAL_StatusTypeDef _SI473X_statusToHALStatus(SI473X_Status* status) {
   return testBits(*status, SI473X_STATUS_ERR) ? HAL_ERROR : HAL_OK;
 }
 
+HAL_StatusTypeDef _SI473X_spiTxRx(SI473X* si473x, uint8_t* tx, uint8_t* rx, uint8_t length) {
+  HAL_StatusTypeDef ret;
+  uint8_t i;
+  _SI473X_assertCS(si473x);
+  sleep_us(1);
+  for (i = 0; i < length; i++) {
+    ret = HAL_SPI_TransmitReceive(si473x->spi, tx + i, rx + i, 1, SI473X_SPI_TIMEOUT);
+    if (ret != HAL_OK) {
+      return ret;
+    }
+    sleep_us(1);
+  }
+  _SI473X_deassertCS(si473x);
+  return HAL_OK;
+}
+
 HAL_StatusTypeDef _SI473X_spiWriteCommand(SI473X* si473x, uint8_t cmd, uint8_t* args, uint8_t argsLength) {
   int i;
   uint8_t tx[9];
@@ -90,13 +125,7 @@ HAL_StatusTypeDef _SI473X_spiWriteCommand(SI473X* si473x, uint8_t cmd, uint8_t* 
     tx[i] = 0;
   }
   
-  sleep_ms(10);
-  _SI473X_assertCS(si473x);
-  sleep_ms(10);
-  HAL_StatusTypeDef spiTxRxResult = HAL_SPI_TransmitReceive(si473x->spi, tx, rx, 9, SI473X_SPI_TIMEOUT);
-  sleep_ms(10);
-  _SI473X_deassertCS(si473x);
-  sleep_ms(10);
+  HAL_StatusTypeDef spiTxRxResult = _SI473X_spiTxRx(si473x, tx, rx, 9);
   if (spiTxRxResult != HAL_OK) {
     SI473X_DEBUG_OUT("spiWriteCommand: tx/rx error: 0x%02x\n", spiTxRxResult);
   }
@@ -109,15 +138,7 @@ HAL_StatusTypeDef _SI473X_read1(SI473X* si473x, SI473X_Status* status) {
 
   tx[0] = SI473X_SPI_CONTROL_READ1_GPO1;
   tx[1] = 0x00;
-  rx[0] = 0x00;
-  rx[1] = 0x00;
-  sleep_ms(10);
-  _SI473X_assertCS(si473x);
-  sleep_ms(10);
-  HAL_StatusTypeDef spiTxRxResult = HAL_SPI_TransmitReceive(si473x->spi, tx, rx, 2, SI473X_SPI_TIMEOUT);
-  sleep_ms(10);
-  _SI473X_deassertCS(si473x);
-  sleep_ms(10);
+  HAL_StatusTypeDef spiTxRxResult = _SI473X_spiTxRx(si473x, tx, rx, 2);
   if (spiTxRxResult == HAL_OK) {
     *((uint8_t*)status) = rx[1];
     if (testBits(*status, SI473X_STATUS_ERR)) {
@@ -135,16 +156,8 @@ HAL_StatusTypeDef _SI473X_read16(SI473X* si473x, uint8_t* rxBuffer, uint8_t rxBu
   uint8_t rx[17];
 
   memset(tx, 0, 17);
-  memset(rx, 0, 17);
-
   tx[0] = SI473X_SPI_CONTROL_READ16_GPO1;
-  sleep_ms(10);
-  _SI473X_assertCS(si473x);
-  sleep_ms(10);
-  HAL_StatusTypeDef spiTxRxResult = HAL_SPI_TransmitReceive(si473x->spi, tx, rx, 17, SI473X_SPI_TIMEOUT);
-  sleep_ms(10);
-  _SI473X_deassertCS(si473x);
-  sleep_ms(10);
+  HAL_StatusTypeDef spiTxRxResult = _SI473X_spiTxRx(si473x, tx, rx, 17);
   if (spiTxRxResult == HAL_OK) {
     memcpy(rxBuffer, rx + 1, rxBufferLength);
     if (rxBuffer[0] & SI473X_STATUS_ERR) {

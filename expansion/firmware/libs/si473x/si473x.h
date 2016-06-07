@@ -235,14 +235,14 @@ typedef struct {
   uint16_t resetPin;
   GPIO_TypeDef* interruptPort;
   uint16_t interruptPin;
-  // TODO: SPI Disable: GPIO_TypeDef* gpo1Port;
-  // TODO: SPI Disable: uint16_t gpo1Pin;
+  GPIO_TypeDef* gpo1Port;
+  uint16_t gpo1Pin;
 } SI473X;
 
 HAL_StatusTypeDef SI473X_setup(SI473X* si473x);
 void SI473X_tick(SI473X* si473x);
 
-uint16_t SI473X_fmFrequencyToUint16(float frequency);
+uint16_t SI473X_fmFrequencyToUint16(uint32_t frequency);
 
 HAL_StatusTypeDef SI473X_powerUp(SI473X* si473x, uint8_t arg1, uint8_t arg2, SI473X_Status* status);
 HAL_StatusTypeDef SI473X_powerUpQueryLibraryId(SI473X* si473x, uint8_t arg1, uint8_t arg2, SI473X_PowerUpQueryLibraryIdResponse* response);
