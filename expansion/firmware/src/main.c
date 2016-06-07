@@ -7,9 +7,11 @@
 void setup() {
   debug_setup();
   sleep_ms(100);
-  radio_setup();
-  
   DEBUG_OUT("setup\n");
+
+  radio_setup();
+
+  DEBUG_OUT("END setup\n");
 }
 
 void loop() {

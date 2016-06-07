@@ -8,6 +8,8 @@
 #  define SI473X_SPI_TIMEOUT 1000
 #endif
 
+#define PACKED __attribute__((packed))
+
 #ifdef SI473X_DEBUG
 #  define SI473X_DEBUG_OUT(format, ...) printf("%s:%d: SI473X: " format, __FILE__, __LINE__, ##__VA_ARGS__)
 #else
@@ -116,12 +118,21 @@
 #define SI473X_PROP_RX_VOLUME                     0x4000
 #define SI473X_PROP_RX_HARD_MUTE                  0x4001
 
+#define SI473X_PROP_GPO_IEN_RSQREP  0x0800
+#define SI473X_PROP_GPO_IEN_RDSREP  0x0400
+#define SI473X_PROP_GPO_IEN_STCREP  0x0100
+#define SI473X_PROP_GPO_IEN_CTSIEN  0x0080
+#define SI473X_PROP_GPO_IEN_ERRIEN  0x0040
+#define SI473X_PROP_GPO_IEN_RSQIEN  0x0008
+#define SI473X_PROP_GPO_IEN_RDSIEN  0x0004
+#define SI473X_PROP_GPO_IEN_STCIEN  0x0001
+
 typedef uint8_t SI473X_Status;
 #define SI473X_STATUS_CTS    0b10000000 //< Clear to Send
 #define SI473X_STATUS_ERR    0b01000000 //< Error
-#define SI473X_STATUS_RDSINT 0b00000100 //< RDS Interrupt (RDS interrupt has been triggered)
-#define SI473X_STATUS_ASQINT 0b00000010 //< ASQ Interrupt (Signal quality measurement has not been triggere Signal quality measurement has been triggered)
-#define SI473X_STATUS_STCINT 0b00000001 //< STC Interrupt (Tune complete has not been triggere Tune complete has been triggered)
+#define SI473X_STATUS_RDSINT 0b00000100 //< RDS Interrupt
+#define SI473X_STATUS_ASQINT 0b00000010 //< ASQ Interrupt (Signal Quality)
+#define SI473X_STATUS_STCINT 0b00000001 //< STC Interrupt (Seek/Tune Complete Interrupt)
 
 #define SI473X_POWER_UP_ARG1_CTSIEN   0b10000000 //< CTS Interrupt Enable
 #define SI473X_POWER_UP_ARG1_GPO2OEN  0b01000000 //< GPO2 Output Enable
@@ -142,7 +153,7 @@ typedef uint8_t SI473X_Status;
 typedef struct {
   uint8_t arg1;
   uint8_t arg2;
-} SI473X_PowerUpArgs;
+} PACKED SI473X_PowerUpArgs;
 
 typedef struct {
   SI473X_Status status;
@@ -153,7 +164,7 @@ typedef struct {
   uint8_t reserved1;
   uint8_t chipRev;
   uint8_t libraryRev;
-} SI473X_PowerUpQueryLibraryIdResponse;
+} PACKED SI473X_PowerUpQueryLibraryIdResponse;
 
 typedef struct {
   SI473X_Status status;
@@ -164,42 +175,42 @@ typedef struct {
   uint8_t componentMajorRev;
   uint8_t componentMinorRev;
   uint8_t chipRev;
-} SI473X_GetRevResponse;
+} PACKED SI473X_GetRevResponse;
 
 typedef struct {
   uint8_t reserved; // always write 0
   uint16_t property;
   uint16_t value;
-} SI473X_SetPropertyArgs;
+} PACKED SI473X_SetPropertyArgs;
 
 typedef struct {
   uint8_t reserved; // always write 0
   uint16_t property;
-} SI473X_GetPropertyArgs;
+} PACKED SI473X_GetPropertyArgs;
 
 typedef struct {
   SI473X_Status status;
   uint8_t reserved;
   uint16_t value;
-} SI473X_GetPropertyReponse;
+} PACKED SI473X_GetPropertyReponse;
 
 typedef struct {
   uint8_t arg1;
   uint16_t frequency;
   uint8_t antennaCapacitor;
-} SI473X_FmTuneFreqArgs;
+} PACKED SI473X_FmTuneFreqArgs;
 #define SI473X_FM_TUNE_FREQ_ARG1_FREEZE 0b00000010
 #define SI473X_FM_TUNE_FREQ_ARG1_FAST   0b00000001
 
 typedef struct {
   uint8_t arg1;
-} SI473X_FmSeekStartArgs;
+} PACKED SI473X_FmSeekStartArgs;
 #define SI473X_FM_TUNE_FREQ_ARG1_SEEKUP 0b00001000
 #define SI473X_FM_TUNE_FREQ_ARG1_WRAP   0b00000100
 
 typedef struct {
   uint8_t arg1;
-} SI473X_FmTuneStatusArgs;
+} PACKED SI473X_FmTuneStatusArgs;
 #define SI473X_FM_TUNE_STATUS_ARG1_CANCEL 0b00000010
 #define SI473X_FM_TUNE_STATUS_ARG1_INTACK 0b00000001
 
@@ -211,7 +222,7 @@ typedef struct {
   uint8_t snr;
   uint8_t mult;
   uint8_t readAntCap;
-} SI473X_FmTuneStatusResponse;
+} PACKED SI473X_FmTuneStatusResponse;
 #define SI473X_FM_TUNE_STATUS_RESP1_BLTF  0b10000000
 #define SI473X_FM_TUNE_STATUS_RESP1_AFCRL 0b00000010
 #define SI473X_FM_TUNE_STATUS_RESP1_VALID 0b00000001
