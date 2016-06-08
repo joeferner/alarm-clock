@@ -322,6 +322,23 @@ HAL_StatusTypeDef SI473X_getIntStatus(SI473X* si473x, SI473X_Status* status) {
   return _SI473X_writeCommandRead1(si473x, SI473X_CMD_GET_INT_STATUS, NULL, 0, status);
 }
 
+HAL_StatusTypeDef SI473X_waitForCTS(SI473X* si473x) {
+  SI473X_Status status;
+  HAL_StatusTypeDef ret;
+  
+  do {
+    ret = SI473X_getStatus(si473x, &status);
+    if (ret != HAL_OK) {
+      return ret;
+    }
+  } while(!(status & SI473X_STATUS_CTS));
+  return HAL_OK;
+}
+
+HAL_StatusTypeDef SI473X_getStatus(SI473X* si473x, SI473X_Status* status) {
+  return _SI473X_read1(si473x, status);
+}
+
 HAL_StatusTypeDef SI473X_fmTuneFreq(
   SI473X* si473x,
   bool freeze,

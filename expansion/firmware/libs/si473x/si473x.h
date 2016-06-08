@@ -263,6 +263,8 @@ HAL_StatusTypeDef SI473X_powerDown(SI473X* si473x, SI473X_Status* status);
 HAL_StatusTypeDef SI473X_setProperty(SI473X* si473x, uint16_t property, uint16_t value, SI473X_Status* status);
 HAL_StatusTypeDef SI473X_getProperty(SI473X* si473x, uint16_t property, SI473X_GetPropertyReponse* response);
 HAL_StatusTypeDef SI473X_getIntStatus(SI473X* si473x, SI473X_Status* status);
+HAL_StatusTypeDef SI473X_waitForCTS(SI473X* si473x);
+HAL_StatusTypeDef SI473X_getStatus(SI473X* si473x, SI473X_Status* status);
 
 /**
  * @param freeze    Freeze Metrics During Alternate Frequency Jump. If set will cause
