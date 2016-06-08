@@ -12,15 +12,11 @@ HAL_StatusTypeDef radio_setup() {
   
   DEBUG_OUT("BEGIN radio_setup\n");
   
-  _si473x.spi = &hspi1;
-  _si473x.csPort = SI473X_CS_PORT;
-  _si473x.csPin = SI473X_CS_PIN;
+  _si473x.i2c = &hi2c1;
   _si473x.resetPort = SI473X_RESET_PORT;
   _si473x.resetPin = SI473X_RESET_PIN;
   _si473x.interruptPort = SI473X_INT_PORT;
   _si473x.interruptPin = SI473X_INT_PIN;
-  _si473x.gpo1Port = SPI1_MISO_PORT;
-  _si473x.gpo1Pin = SPI1_MISO_PIN;
   ret = SI473X_setup(&_si473x);
   if (ret != HAL_OK) {
     DEBUG_OUT("SI473X_setup failed: 0x%02x\n", ret);
@@ -65,7 +61,8 @@ HAL_StatusTypeDef radio_setup() {
   }
   sleep_ms(10);
   
-  uint16_t freq = SI473X_fmFrequencyToUint16(101.1 * 1000000);
+  /*
+  uint16_t freq = SI473X_fmFrequencyToUint16(94700000);
   DEBUG_OUT("SI473X_fmTuneFreq\n");
   ret = SI473X_fmTuneFreq(&_si473x, false, false, freq, 0, &status);
   if (ret != HAL_OK) {
@@ -73,7 +70,17 @@ HAL_StatusTypeDef radio_setup() {
     return ret;
   }
   sleep_ms(10);
+  */
   
+  DEBUG_OUT("SI473X_fmSeekStart\n");
+  ret = SI473X_fmSeekStart(&_si473x, true, true, &status);
+  if (ret != HAL_OK) {
+    DEBUG_OUT("SI473X_fmSeekStart failed: 0x%02x\n", ret);
+    return ret;
+  }
+  sleep_ms(10);
+  
+  /*
   while(1) {
     ret = SI473X_getIntStatus(&_si473x, &status);
     if (ret != HAL_OK) {
@@ -84,8 +91,11 @@ HAL_StatusTypeDef radio_setup() {
       break;
     }
     DEBUG_OUT("SI473X_getIntStatus: 0x%02x\n", status);
-    sleep_ms(100);
+    sleep_ms(1000);
   }
+  */
+
+  sleep_ms(3000);
   
   SI473X_FmTuneStatusResponse tuneStatus;
   DEBUG_OUT("SI473X_fmTuneStatus\n");

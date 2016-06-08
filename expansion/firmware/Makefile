@@ -100,7 +100,6 @@ endif
 
 ifneq (,$(findstring I2C,$(FEATURES)))
 	SRCS += $(BUILD_DIR)/Drivers/$(DEVICE_FAMILY)_HAL_Driver/Src/$(DEVICE_FAMILYL)_hal_i2c.c
-	SRCS += $(BUILD_DIR)/Drivers/$(DEVICE_FAMILY)_HAL_Driver/Src/$(DEVICE_FAMILYL)_hal_i2c_ex.c
 endif
 
 ifneq (,$(findstring FLASH,$(FEATURES)))

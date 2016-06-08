@@ -16,6 +16,13 @@
 #  define SI473X_DEBUG_OUT(format, ...)
 #endif
 
+#ifdef SI473X_I2C_SEN_0
+#   define SI473X_I2C_ADDR 0b00100010
+#endif
+#ifdef SI473X_I2C_SEN_1
+#   define SI473X_I2C_ADDR 0b11000110
+#endif
+
 #define SI473X_CMD_POWER_UP        0x01
 #define SI473X_CMD_GET_REV         0x10
 #define SI473X_CMD_POWER_DOWN      0x11
@@ -228,15 +235,20 @@ typedef struct {
 #define SI473X_FM_TUNE_STATUS_RESP1_VALID 0b00000001
 
 typedef struct {
+#ifdef SI473X_SPI
   SPI_HandleTypeDef* spi;
   GPIO_TypeDef* csPort;
   uint16_t csPin;
+  GPIO_TypeDef* gpo1Port;
+  uint16_t gpo1Pin;
+#endif
+#ifdef SI473X_I2C
+  I2C_HandleTypeDef* i2c;
+#endif
   GPIO_TypeDef* resetPort;
   uint16_t resetPin;
   GPIO_TypeDef* interruptPort;
   uint16_t interruptPin;
-  GPIO_TypeDef* gpo1Port;
-  uint16_t gpo1Pin;
 } SI473X;
 
 HAL_StatusTypeDef SI473X_setup(SI473X* si473x);
