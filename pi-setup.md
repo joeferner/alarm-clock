@@ -85,3 +85,15 @@
       tsd install
       tsc -w
       nodemon build/index.js
+      
+1. Enable i2S audio (https://learn.adafruit.com/adafruit-max98357-i2s-class-d-mono-amp/raspberry-pi-usage)
+   1. Edit `/boot/config.txt`. Uncomment `dtparam=i2s=on`. Comment `dtparam=audio=on`. Add `dtoverlay=hifiberry-dac`
+   1. Edit `/etc/asound.conf`
+
+      pcm.!default  {
+       type hw card 0
+      }
+      ctl.!default {
+       type hw card 0
+      }
+      
