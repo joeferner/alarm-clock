@@ -14,6 +14,8 @@ libs/CRYSTAL.lib
 libs/SI4737-GU.lib
 libs/ANT.lib
 libs/P02.lib
+libs/P03.lib
+libs/P05.lib
 libs/P22.lib
 libs/TVS-DIODE.lib
 libs/IS31AP4066D.lib
@@ -25,3 +27,9 @@ libs/MOSFET-P.lib
 libs/DIODESCH.lib
 libs/DMMT5401.lib
 libs/DIODES-AP3211.lib
+libs/74157.lib
+libs/NXPUDA1334ATS.lib
+libs/SEN-SHT3x-DIS.lib
+libs/ST-TDA7266.lib
+libs/STM32-48PIN.lib
+libs/ST-SWD.lib
