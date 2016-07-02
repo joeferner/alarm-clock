@@ -29,5 +29,4 @@ KERNEL=kernel7
 make -j${CORES} ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2709_defconfig
 make -j${CORES} ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs
 
-scp ./drivers/staging/fbtft/*.ko pi@${PIADDR}:/lib/modules/${KERNEL_RELEASE}/kernel/drivers/staging/fbtft/
-
+echo "Copy linux/arch/arm/boot/dts/overlays/tinylcd35.dtbo to /boot/overlays/ on the Raspberry PI"
