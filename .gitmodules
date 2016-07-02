@@ -1,3 +1,9 @@
 [submodule "expansion/firmware/libs/utils"]
 	path = expansion/firmware/libs/utils
 	url = git@github.com:joeferner/stm32-utils.git
+[submodule "expansion/rpi-kernel/linux"]
+	path = expansion/rpi-kernel/linux
+	url = git@github.com:joeferner/linux.git
+[submodule "expansion/rpi-kernel/tools"]
+	path = expansion/rpi-kernel/tools
+	url = https://github.com/raspberrypi/tools
