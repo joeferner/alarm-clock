@@ -101,6 +101,9 @@
        cd ~/alarm-clock/server/web/src
        npm install
        cd ~/alarm-clock/web
+       sudo mkdir /var/log/alarm-clock
+       sudo chown pi:pi /var/log/alarm-clock
+       # update /home/pi/alarm-clock/server/src/settings.json
 
 # Enable Audio
 

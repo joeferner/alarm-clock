@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "prepublish": "npm run build",
-    "build": "tsc",
+    "build": "webpack",
     "watch": "webpack --progress --colors --watch"
   },
   "devDependencies": {
