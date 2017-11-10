@@ -1,7 +1,6 @@
-/// <reference path="../../../alarm-clock-web.d.ts" />
-
 import * as React from "react";
 import * as Radium from "radium";
+import {CSSProperties} from "react";
 var dateFormat = require('dateformat');
 
 interface ClockProps {
@@ -19,19 +18,19 @@ export default class Clock extends React.Component<ClockProps, ClockState> {
     container: {
       paddingTop: '30px',
       paddingBottom: '30px'
-    },
+    } as CSSProperties,
 
     timeContainer: {
       width: '480px',
       textAlign: 'center'
-    },
+    } as CSSProperties,
 
     time: {
       fontSize: '120px',
       textAlign: 'right',
       lineHeight: '120px',
       display: 'inline'
-    },
+    } as CSSProperties,
 
     ampm: {
       fontSize: '30px',
@@ -39,11 +38,11 @@ export default class Clock extends React.Component<ClockProps, ClockState> {
       display: 'inline',
       position: 'absolute',
       top: '107px'
-    },
+    } as CSSProperties,
 
     dateContainer: {
       textAlign: 'center'
-    },
+    } as CSSProperties,
 
     date: {}
   };

@@ -1,4 +1,3 @@
-/// <reference path="../alarm-clock.d.ts" />
 import fs = require('fs');
 import path = require('path');
   

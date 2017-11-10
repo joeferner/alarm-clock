@@ -5,3 +5,4 @@ sessions/
 typings/
 settings.json
 cache.json
+*.js
