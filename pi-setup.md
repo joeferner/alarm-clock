@@ -96,10 +96,11 @@
 1. Install the server
 
        git clone https://github.com/joeferner/alarm-clock.git
-       cd alarm-clock/server/src
+       cd ~/alarm-clock/server/src
        npm install
-       tsc -w
-       nodemon build/index.js
+       cd ~/alarm-clock/server/web/src
+       npm install
+       cd ~/alarm-clock/web
 
 # Enable Audio
 
