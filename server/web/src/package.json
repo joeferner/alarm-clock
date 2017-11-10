@@ -5,6 +5,8 @@
   "author": "Joe Ferner <joe@fernsroth.com>",
   "license": "MIT",
   "scripts": {
+    "prepublish": "npm run build",
+    "build": "tsc",
     "watch": "webpack --progress --colors --watch"
   },
   "devDependencies": {

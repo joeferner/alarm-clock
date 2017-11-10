@@ -95,11 +95,9 @@
 
 1. Install the server
 
-       sudo npm install tsc tsd nodemon -g
-       git clone alarm-clock
-       cd server
+       git clone https://github.com/joeferner/alarm-clock.git
+       cd alarm-clock/server/src
        npm install
-       tsd install
        tsc -w
        nodemon build/index.js
 
